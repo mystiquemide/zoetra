@@ -62,3 +62,6 @@ contracts/.env
 # daemon
 daemon/node_modules
 daemon/.env
+
+# secrets (wallet keys, never committed)
+/.secrets/
