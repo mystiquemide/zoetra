@@ -1,7 +1,8 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config();
+require("dotenv").config(); // contracts/.env: non-secret RPC config
+require("dotenv").config({ path: "../.secrets/deployer.env" }); // gitignored, holds PRIVATE_KEY
 
-const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY;
+const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY || process.env.PRIVATE_KEY;
 const accounts = DEPLOYER_PRIVATE_KEY ? [DEPLOYER_PRIVATE_KEY] : [];
 
 /** @type import('hardhat/config').HardhatUserConfig */
