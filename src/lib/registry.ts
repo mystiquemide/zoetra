@@ -140,6 +140,21 @@ export const registryAbi = [
   },
 ] as const
 
+export interface RawDeviceTuple {
+  operator: `0x${string}`
+  stake: bigint
+  registeredAt: bigint
+  windowStart: bigint
+  lastBeat: bigint
+  deregisteredAt: bigint
+  lastSlashAt: bigint
+  intervalSec: number
+  beatsCurr: number
+  beatsPrev: number
+  slaBps: number
+  name: string
+}
+
 export interface DeviceView {
   id: bigint
   operator: `0x${string}`

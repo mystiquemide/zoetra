@@ -16,6 +16,13 @@ function scoreState(score: number, slaBps: number): "alive" | "warn" | "bleed" {
   return "alive"
 }
 
+function slashDisabledReason(isConnected: boolean, canSlash: boolean, dead: boolean): string | undefined {
+  if (dead) return "Device is deregistered"
+  if (!canSlash) return "Score is still above its SLA threshold"
+  if (!isConnected) return "Connect a wallet to slash this device"
+  return undefined
+}
+
 export function DeviceCard({ device }: { device: DeviceView }) {
   const { isConnected } = useAccount()
   const { writeContractAsync, isPending } = useWriteContract()
@@ -23,7 +30,6 @@ export function DeviceCard({ device }: { device: DeviceView }) {
 
   const [pulsing, setPulsing] = useState(false)
   const lastBeatRef = useRef(device.lastBeat)
-  const [history, setHistory] = useState<number[]>([device.score])
 
   useEffect(() => {
     if (device.lastBeat !== lastBeatRef.current) {
@@ -34,9 +40,20 @@ export function DeviceCard({ device }: { device: DeviceView }) {
     }
   }, [device.lastBeat])
 
-  useEffect(() => {
-    setHistory((prev) => [...prev.slice(-39), device.score])
-  }, [device.score])
+  // Adjust state during render (React's recommended pattern for deriving state
+  // from a prop change) rather than an effect, which would cause an extra
+  // cascading render on every score update.
+  const [scoreHistory, setScoreHistory] = useState(() => ({
+    lastScore: device.score,
+    samples: [device.score],
+  }))
+  if (device.score !== scoreHistory.lastScore) {
+    setScoreHistory({
+      lastScore: device.score,
+      samples: [...scoreHistory.samples.slice(-39), device.score],
+    })
+  }
+  const history = scoreHistory.samples
 
   const state = scoreState(device.score, device.slaBps)
   const dead = device.deregisteredAt !== 0n
@@ -120,6 +137,7 @@ export function DeviceCard({ device }: { device: DeviceView }) {
           size="sm"
           disabled={!isConnected || !canSlash || isPending}
           onClick={handleSlash}
+          title={slashDisabledReason(isConnected, canSlash, dead)}
           className={cn(
             "gap-1.5 border-z-bleed text-z-bleed hover:bg-z-bleed/10 disabled:opacity-40"
           )}

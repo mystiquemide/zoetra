@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Separate workspaces with their own tooling (CommonJS Hardhat, plain Node daemon):
+    "contracts/**",
+    "daemon/**",
   ]),
 ]);
 

@@ -2,7 +2,7 @@
 
 import { useReadContract } from "wagmi"
 import { activeChain } from "@/lib/chains"
-import { REGISTRY_ADDRESS, registryAbi, type DeviceView } from "@/lib/registry"
+import { REGISTRY_ADDRESS, registryAbi, type DeviceView, type RawDeviceTuple } from "@/lib/registry"
 
 const MAX_DEVICES = 50
 
@@ -20,7 +20,11 @@ export function useDevices() {
 
   const devices: DeviceView[] = []
   if (data) {
-    const [ids, list, scores] = data as [readonly bigint[], readonly any[], readonly number[]]
+    const [ids, list, scores] = data as readonly [
+      readonly bigint[],
+      readonly RawDeviceTuple[],
+      readonly number[],
+    ]
     for (let i = 0; i < ids.length; i++) {
       const d = list[i]
       if (d.operator === "0x0000000000000000000000000000000000000000") continue

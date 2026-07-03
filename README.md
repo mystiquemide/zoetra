@@ -11,6 +11,20 @@ This only works because BOT Chain has sub-second finality and near-zero fees. A 
 - **Live dashboard:** https://zoetra.vercel.app/live
 - **Contract (BOT Chain testnet, chain 968):** [`0x32550FbbB458380e2A198E97dABcc70fEe95b8E6`](https://scan.bohr.life/address/0x32550FbbB458380e2A198E97dABcc70fEe95b8E6)
 
+## Judge quickstart
+
+- Live demo: https://zoetra.vercel.app/live
+- Contract: `0x32550FbbB458380e2A198E97dABcc70fEe95b8E6`
+- Network: BOT Chain testnet ("Bohr"), chain ID 968
+- Explorer: https://scan.bohr.life/address/0x32550FbbB458380e2A198E97dABcc70fEe95b8E6
+- Demo video: recording in progress, link lands here before submission
+
+What to watch:
+1. Three device wallets heartbeat every 5 seconds, each one a real transaction.
+2. Every card's score is computed live on-chain from `block.timestamp`, not cached or polled from a database.
+3. Stop one daemon (`Ctrl+C` on `daemon/heartbeat.mjs`) and its score decays visibly within seconds.
+4. Once a device's score falls below its own SLA, the Slash button activates for anyone, including you if you connect a wallet, and pays a bounty for catching the breach.
+
 ## How it works
 
 1. **Register & stake** — declare a heartbeat interval (5–300s) and an SLA threshold (50–99.99%), stake ≥0.05 BOT.
@@ -81,6 +95,7 @@ npm run dev
 
 - Contract, deployment, all three devices, every heartbeat, and the one slash referenced in the demo video are real transactions on BOT Chain testnet, verifiable at [scan.bohr.life](https://scan.bohr.life/address/0x32550FbbB458380e2A198E97dABcc70fEe95b8E6).
 - `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` ships with a placeholder because RainbowKit hard-requires a non-empty value to boot at all, even for wallets that never touch WalletConnect. Injected wallets (MetaMask etc.) work out of the box; swap in a real WalletConnect Cloud project ID for the QR-code flow.
+- `npm audit` reports vulnerabilities in the WalletConnect/RainbowKit dependency tree (root) and Hardhat's tooling tree (contracts). All fixes require `--force` and risk breaking wallet connect or the build right before submission, so they're deliberately left unpatched rather than risking a regression under deadline. None are in code this project's contract or daemon logic touches directly.
 
 ## Prizes this targets
 
