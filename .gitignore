@@ -67,3 +67,6 @@ daemon/.env
 
 # secrets (wallet keys, never committed)
 /.secrets/
+
+.vercel
+.env*
