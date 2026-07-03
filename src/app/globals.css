@@ -1,26 +1,69 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --z-bg: #0a0b0d;
+  --z-surface: #12141a;
+  --z-surface-2: #1a1d26;
+  --z-border: #232733;
+  --z-text: #e8ebf1;
+  --z-text-dim: #8b93a7;
+  --z-alive: #2dd4a7;
+  --z-bleed: #f4574d;
+  --z-warn: #e8b44c;
+  --z-accent: #5b8cff;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-z-bg: var(--z-bg);
+  --color-z-surface: var(--z-surface);
+  --color-z-surface-2: var(--z-surface-2);
+  --color-z-border: var(--z-border);
+  --color-z-text: var(--z-text);
+  --color-z-text-dim: var(--z-text-dim);
+  --color-z-alive: var(--z-alive);
+  --color-z-bleed: var(--z-bleed);
+  --color-z-warn: var(--z-warn);
+  --color-z-accent: var(--z-accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  background: var(--z-bg);
+  color: var(--z-text);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+@keyframes zoetra-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes zoetra-throb {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.pulse-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: zoetra-pulse 0.6s ease-out;
+}
+
+.throb {
+  animation: zoetra-throb 1.2s ease-in-out infinite;
 }

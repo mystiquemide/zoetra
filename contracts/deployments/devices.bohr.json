@@ -1,0 +1,26 @@
+[
+  {
+    "name": "device-a",
+    "deviceId": "1",
+    "operator": "0x5Bd4515Bdc070aA0B5398cf7199EAc3236A5d4e0",
+    "intervalSec": 5,
+    "slaBps": 9000,
+    "registerTx": "0xd378a471930fbabf50955fff458ec923c006acf8ee3d2a302e6261fb01954965"
+  },
+  {
+    "name": "device-b",
+    "deviceId": "2",
+    "operator": "0x5323B7d85a29F708c6fF8E5Fd263a99178774Ac2",
+    "intervalSec": 5,
+    "slaBps": 9000,
+    "registerTx": "0x861f39eb160583c9bcf35f95296269a58f3c465c47fd5860fe9bcdbaa53327e5"
+  },
+  {
+    "name": "device-c",
+    "deviceId": "3",
+    "operator": "0x66B42c76EFB1eC4EaCBD88e204e21f263368313e",
+    "intervalSec": 5,
+    "slaBps": 9000,
+    "registerTx": "0x4cad43e2df14f7536c04db7483c6fe57c61ee29368abae65ba4718e175b225c2"
+  }
+]
