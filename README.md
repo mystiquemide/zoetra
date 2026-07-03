@@ -97,6 +97,27 @@ npm run dev
 - `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` ships with a placeholder because RainbowKit hard-requires a non-empty value to boot at all, even for wallets that never touch WalletConnect. Injected wallets (MetaMask etc.) work out of the box; swap in a real WalletConnect Cloud project ID for the QR-code flow.
 - `npm audit` reports vulnerabilities in the WalletConnect/RainbowKit dependency tree (root) and Hardhat's tooling tree (contracts). All fixes require `--force` and risk breaking wallet connect or the build right before submission, so they're deliberately left unpatched rather than risking a regression under deadline. None are in code this project's contract or daemon logic touches directly.
 
+## Roadmap
+
+**Now (cheap, no new architecture):**
+- Verify the deployed contract source on Blockscout
+- Publish the heartbeat client as an installable package instead of a copy-pasted script
+- Deploy to BOT Chain mainnet (677); the dual-chain config already exists
+
+**Near-term (real product work):**
+- Device profile pages with historical uptime charts, cut from this build as premature at 3 devices, necessary the moment there are dozens
+- An operator trust score aggregating a single operator's record across all their devices
+- Lightweight clients for hardware that can't run a full Node process (ESP32/Arduino-class devices), likely via a companion relay or session keys so cheap hardware doesn't need to hold funds directly
+
+**Medium-term (the actual business model hiding in the registry):**
+- Delegated staking: let third parties back a device's stake without being its operator, liquid staking for uptime bonds
+- SLA insurance: let underwriters pool capital that pays out if a device gets slashed, in exchange for a premium
+- A public cross-device leaderboard/explorer, once there's a real fleet to rank
+
+**The honest hard problem:** a heartbeat today only proves a *wallet* is active, not that the *physical device* sent it, anyone holding the key could run the daemon from anywhere. The real fix is hardware-rooted attestation (a signature from a TPM or secure element on the device itself), which is a hardware engineering project, not a smart contract change.
+
+**The big one:** oracle bridges into existing closed DePIN networks (Helium, io.net) that pull their existing attestations into this registry too, so adoption doesn't require every device to abandon its current network. Multi-quarter scope, not a hackathon feature.
+
 ## Prizes this targets
 
 Track Award (DePIN / Real World) + Best Content (X thread with the kill-a-device demo) + PR/Bug/Optimization bounty (filed separately: BOT Chain's developer docs aren't linked from the marketing site or the faucet page, only discoverable via the challenge's Notion doc).
