@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { HeartPulse, Scissors, ExternalLink } from "lucide-react"
+import { CheckCircle2, AlertTriangle, ShieldAlert, PowerOff, Scissors, ExternalLink } from "lucide-react"
 import { useAccount, useWriteContract } from "wagmi"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -9,11 +9,30 @@ import { cn } from "@/lib/utils"
 import { activeChain, explorerAddressUrl } from "@/lib/chains"
 import { REGISTRY_ADDRESS, registryAbi, type DeviceView } from "@/lib/registry"
 import { useToast } from "@/components/ui/toast"
+import { useClockTick } from "@/hooks/use-clock-tick"
+import { ProofTrail } from "@/components/live/proof-trail"
+import type { FeedEntry } from "@/hooks/use-live-feed"
+import {
+  computeScoreDetail,
+  secondsUntilBreach,
+  secondsUntilNextHeartbeatDue,
+  secondsSinceLastBeat,
+} from "@/lib/score-math"
 
-function scoreState(score: number, slaBps: number): "alive" | "warn" | "bleed" {
-  if (score < slaBps) return "bleed"
-  if (score < 9700) return "warn"
-  return "alive"
+type Status = "healthy" | "at-risk" | "breached" | "deregistered"
+
+function statusOf(score: number, slaBps: number, dead: boolean): Status {
+  if (dead) return "deregistered"
+  if (score < slaBps) return "breached"
+  if (score < 9700) return "at-risk"
+  return "healthy"
+}
+
+const STATUS_META: Record<Status, { label: string; icon: typeof CheckCircle2; color: string }> = {
+  healthy: { label: "Healthy", icon: CheckCircle2, color: "text-z-alive" },
+  "at-risk": { label: "At risk", icon: AlertTriangle, color: "text-z-warn" },
+  breached: { label: "Breached", icon: ShieldAlert, color: "text-z-bleed" },
+  deregistered: { label: "Deregistered", icon: PowerOff, color: "text-z-text-dim" },
 }
 
 function slashDisabledReason(isConnected: boolean, canSlash: boolean, dead: boolean): string | undefined {
@@ -23,10 +42,18 @@ function slashDisabledReason(isConnected: boolean, canSlash: boolean, dead: bool
   return undefined
 }
 
-export function DeviceCard({ device }: { device: DeviceView }) {
+function formatSeconds(s: number): string {
+  if (s < 60) return `${s}s`
+  const m = Math.floor(s / 60)
+  const rem = s % 60
+  return `${m}m ${rem}s`
+}
+
+export function DeviceCard({ device, feedEntries }: { device: DeviceView; feedEntries: FeedEntry[] }) {
   const { isConnected } = useAccount()
   const { writeContractAsync, isPending } = useWriteContract()
   const { toast } = useToast()
+  const nowSec = useClockTick()
 
   const [pulsing, setPulsing] = useState(false)
   const lastBeatRef = useRef(device.lastBeat)
@@ -55,12 +82,44 @@ export function DeviceCard({ device }: { device: DeviceView }) {
   }
   const history = scoreHistory.samples
 
-  const state = scoreState(device.score, device.slaBps)
   const dead = device.deregisteredAt !== 0n
   const canSlash = !dead && device.score < device.slaBps
+  const status = statusOf(device.score, device.slaBps, dead)
+  const meta = STATUS_META[status]
+  const StatusIcon = meta.icon
 
-  const colorClass =
-    state === "alive" ? "text-z-alive" : state === "warn" ? "text-z-warn" : "text-z-bleed"
+  const scoreInputs = {
+    intervalSec: device.intervalSec,
+    registeredAt: Number(device.registeredAt),
+    windowStart: Number(device.windowStart),
+    beatsPrev: device.beatsPrev,
+    beatsCurr: device.beatsCurr,
+  }
+  const { received, expected } = computeScoreDetail(scoreInputs, nowSec)
+  const lastBeatSec = Number(device.lastBeat)
+  const sinceLastBeat = secondsSinceLastBeat(lastBeatSec, nowSec)
+  const onSchedule = sinceLastBeat !== null && sinceLastBeat <= device.intervalSec * 1.5
+
+  // device.score (on-chain, authoritative) always wins over the client-side
+  // projection below: canSlash is checked first so the countdown can never
+  // show a "slashable" message for a device the chain says is healthy.
+  let timing: string
+  if (dead) {
+    timing = "Deregistered"
+  } else if (canSlash) {
+    timing = "Slashable now"
+  } else if (onSchedule) {
+    timing = `Next heartbeat due in ${formatSeconds(secondsUntilNextHeartbeatDue(device.intervalSec, lastBeatSec, nowSec))}`
+  } else {
+    const breachIn = secondsUntilBreach(scoreInputs, device.slaBps, nowSec)
+    timing = breachIn === null || breachIn <= 0 ? "Monitoring..." : `Slashable in ~${formatSeconds(breachIn)}`
+  }
+
+  const stakeBot = Number(device.stake) / 1e18
+  const atRiskBot = stakeBot * 0.2
+  const bountyBot = atRiskBot * 0.1
+
+  const colorClass = meta.color
 
   async function handleSlash() {
     try {
@@ -90,7 +149,7 @@ export function DeviceCard({ device }: { device: DeviceView }) {
               className={cn(
                 "relative inline-flex h-3 w-3 rounded-full",
                 colorClass,
-                state === "bleed" && "throb"
+                status === "breached" && "throb"
               )}
               style={{ backgroundColor: "currentColor" }}
             />
@@ -100,7 +159,10 @@ export function DeviceCard({ device }: { device: DeviceView }) {
             <div className="font-mono text-xs text-z-text-dim">device #{device.id.toString()}</div>
           </div>
         </div>
-        <HeartPulse className={cn("h-5 w-5", colorClass)} />
+        <div className={cn("flex items-center gap-1.5 text-xs font-medium", colorClass)}>
+          <StatusIcon className="h-4 w-4" />
+          {meta.label}
+        </div>
       </div>
 
       <div className={cn("mt-4 font-mono text-4xl font-semibold tabular-nums", colorClass)}>
@@ -117,10 +179,20 @@ export function DeviceCard({ device }: { device: DeviceView }) {
         />
       </svg>
 
-      <div className="mt-4 flex items-center justify-between font-mono text-xs text-z-text-dim">
-        <span>stake {(Number(device.stake) / 1e18).toFixed(3)} BOT</span>
+      <div className="mt-3 flex items-center justify-between font-mono text-xs text-z-text-dim">
+        <span>{received}/{expected} beats</span>
+        <span className={dead ? undefined : colorClass}>{timing}</span>
+      </div>
+
+      <div className="mt-3 flex items-center justify-between font-mono text-xs text-z-text-dim">
+        <span>stake {stakeBot.toFixed(3)} BOT</span>
         <span>SLA {(device.slaBps / 100).toFixed(0)}%</span>
         <span>every {device.intervalSec}s</span>
+      </div>
+
+      <div className="mt-1 flex items-center justify-between font-mono text-[11px] text-z-text-dim">
+        <span>at risk {atRiskBot.toFixed(3)} BOT</span>
+        <span>bounty {bountyBot.toFixed(3)} BOT</span>
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2">
@@ -146,6 +218,8 @@ export function DeviceCard({ device }: { device: DeviceView }) {
           {isPending ? "Slashing..." : "Slash"}
         </Button>
       </div>
+
+      <ProofTrail deviceId={device.id} entries={feedEntries} />
     </Card>
   )
 }

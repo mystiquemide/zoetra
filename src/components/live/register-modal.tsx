@@ -10,6 +10,13 @@ import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/toast"
 import { activeChain } from "@/lib/chains"
 import { REGISTRY_ADDRESS, registryAbi, MIN_STAKE_BOT } from "@/lib/registry"
+import { cn } from "@/lib/utils"
+
+const PRESETS = [
+  { label: "Critical sensor", interval: 5, sla: 99, hint: "high-value DePIN node" },
+  { label: "Standard node", interval: 15, sla: 95, hint: "general infrastructure" },
+  { label: "Low-power device", interval: 60, sla: 90, hint: "battery / IoT device" },
+] as const
 
 export function RegisterModal({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { isConnected, chain } = useAccount()
@@ -55,6 +62,31 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1.5">
+            <span className="text-sm text-z-text-dim">Presets</span>
+            <div className="grid grid-cols-3 gap-2">
+              {PRESETS.map((preset) => (
+                <button
+                  type="button"
+                  key={preset.label}
+                  onClick={() => {
+                    setInterval_(preset.interval)
+                    setSla(preset.sla)
+                  }}
+                  className={cn(
+                    "rounded-lg border px-2 py-2 text-left text-xs transition-colors",
+                    interval === preset.interval && sla === preset.sla
+                      ? "border-z-accent bg-z-accent/10 text-z-text"
+                      : "border-z-border text-z-text-dim hover:border-z-accent/50"
+                  )}
+                >
+                  <div className="font-medium">{preset.label}</div>
+                  <div className="mt-0.5 font-mono">{preset.interval}s / {preset.sla}%</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <label className="flex flex-col gap-1 text-sm text-z-text-dim">
             Device name
             <input

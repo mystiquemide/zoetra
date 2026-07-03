@@ -1,7 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { Plus } from "lucide-react"
+import { Plus, ScrollText } from "lucide-react"
+import Link from "next/link"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { useAccount } from "wagmi"
 import { Button } from "@/components/ui/button"
@@ -12,6 +13,10 @@ import { DeviceCard } from "@/components/live/device-card"
 import { EventFeed } from "@/components/live/event-feed"
 import { StatsStrip } from "@/components/live/stats-strip"
 import { RegisterModal } from "@/components/live/register-modal"
+import { VerificationPanel } from "@/components/live/verification-panel"
+import { AlertsSettings } from "@/components/live/alerts-settings"
+import { useWebhookUrl } from "@/hooks/use-webhook-url"
+import { useBreachAlerts } from "@/hooks/use-breach-alerts"
 import { activeChain } from "@/lib/chains"
 
 export default function LivePage() {
@@ -19,6 +24,8 @@ export default function LivePage() {
   const { entries, counts } = useLiveFeed()
   const { chain, isConnected } = useAccount()
   const [registerOpen, setRegisterOpen] = useState(false)
+  const { url: webhookUrl } = useWebhookUrl()
+  useBreachAlerts(devices, webhookUrl)
 
   const activeDevices = devices.filter((d) => d.deregisteredAt === 0n).length
   const wrongNetwork = isConnected && chain?.id !== activeChain.id
@@ -33,6 +40,12 @@ export default function LivePage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
+          <Link href="/demo">
+            <Button variant="ghost" size="sm" className="gap-1.5">
+              <ScrollText className="h-4 w-4" />
+              Demo script
+            </Button>
+          </Link>
           <ConnectButton />
           <Button onClick={() => setRegisterOpen(true)} className="gap-2">
             <Plus className="h-4 w-4" />
@@ -47,13 +60,17 @@ export default function LivePage() {
         </div>
       )}
 
-      <div className="mt-8">
+      <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-[2fr_1fr]">
         <StatsStrip
           activeDevices={activeDevices}
           totalDevices={devices.length}
           beats={counts.beat}
           slashes={counts.slashed}
         />
+        <div className="flex flex-col gap-4">
+          <VerificationPanel deviceCount={devices.length} />
+          <AlertsSettings />
+        </div>
       </div>
 
       <div className="mt-8">
@@ -69,7 +86,7 @@ export default function LivePage() {
         )}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {devices.map((device) => (
-            <DeviceCard key={device.id.toString()} device={device} />
+            <DeviceCard key={device.id.toString()} device={device} feedEntries={entries} />
           ))}
         </div>
       </div>

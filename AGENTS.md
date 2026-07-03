@@ -6,7 +6,8 @@ Rules for any AI agent or human working in this repo. Read docs/ARCHITECTURE.md 
 - Solidity ^0.8.28 + Hardhat in `contracts/` (tests are mandatory before deploy)
 - Next.js 16 App Router, TypeScript strict, Tailwind v4, wagmi v2 + viem + RainbowKit
 - Plain Node daemon in `daemon/` (no build step, .mjs)
-- No database, no API routes, no auth. The chain is the only backend. Do not add Prisma, NextAuth, or server state back.
+- No database, no auth, no persistent server. The chain is the only source of truth. Do not add Prisma, NextAuth, or server-side state.
+- One deliberate exception: `src/app/api/alert/route.ts`, a stateless serverless relay for optional breach webhook alerts. It holds no data (webhook URL lives in the visitor's localStorage) and reads nothing from the chain itself; the client already derived the breach from on-chain reads and just asks this route to relay it. Do not add a second API route without a similarly strong reason, and never give any route database access or its own state.
 
 ## Chain facts (verified Jul 3 2026, do not guess new ones)
 - Testnet (primary): 968, https://rpc.bohr.life, explorer https://scan.bohr.life
