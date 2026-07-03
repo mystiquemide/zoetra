@@ -10,9 +10,9 @@ BOT Chain (chain ID 677) removes both blockers: 0.75s blocks, ~0.9s finality, ne
 
 ## Overview
 
-Zoetra is an on-chain heartbeat SLA registry. Devices prove liveness by sending heartbeat transactions to a registry contract at their declared interval. The contract scores uptime over a rolling window, publicly and in real time. Operators stake BOT against an SLA threshold; when a device's score breaches the threshold, anyone can call slash() and burn part of the stake. Uptime stops being a marketing claim and becomes slashable, verifiable state.
+Zoetra is the first permissionless, chain-native SLA layer for DePIN. Every existing DePIN network builds its own closed uptime system, tied to its own hardware; Zoetra is open to any device, from any network, that chooses to run its heartbeat client. Devices prove liveness by sending heartbeat transactions to a registry contract at their declared interval. The contract scores uptime over a rolling window, computed live from `block.timestamp` with no backend, no cron job, no indexer. Operators stake BOT against an SLA threshold; when a device's score breaches the threshold, anyone (not an admin) can call slash() and earn a bounty for catching it. Uptime stops being a marketing claim and becomes slashable, verifiable state. None of this is affordable without BOT Chain: sub-second finality and near-zero fees are what make a heartbeat every few seconds a real transaction instead of a toy.
 
-One line: DePIN uptime you can slash.
+One line: the first permissionless, chain-native SLA layer for DePIN, uptime you can slash.
 
 ## User Roles
 

@@ -4,9 +4,9 @@
 
 Entry for the [BOT Chain Builder Challenge #1](https://rapid-change-2c1.notion.site/BOT-Chain-Builder-Challenge-1-38846f6c38d580c99a84d5022ba83ac5) (DePIN / Real World track).
 
-DePIN networks pay devices for staying online, but "uptime" is normally just a number on an operator-controlled dashboard, nobody outside the company can verify it. Zoetra replaces the dashboard with the chain. Devices send a heartbeat transaction at a self-declared interval, a smart contract scores uptime over a rolling window in real time, and operators stake native BOT against their own SLA. Fall below your own threshold and **anyone** can slash your stake, permissionlessly, and earn a bounty for catching it.
+Every DePIN network builds its own closed uptime system: Helium's proof-of-coverage only works for Helium hotspots, io.net's monitoring only works for io.net nodes. Zoetra is the first open, permissionless SLA layer any device, from any network, can adopt without asking anyone's permission. There's no backend: uptime is scored live, entirely on-chain, from `block.timestamp` alone, no cron job, no indexer, no server keeping score. Operators stake native BOT against their own SLA, and if they breach it, **anyone** (not an admin) can slash the stake, permissionlessly, and earn a bounty for catching it.
 
-This only works because BOT Chain has sub-second finality and near-zero fees. A heartbeat every few seconds is a real transaction; on most chains that's unaffordable, here it's the whole product.
+None of this works without BOT Chain. Sub-second finality and near-zero fees are what turn a heartbeat every few seconds into a real, affordable transaction instead of a toy; on most chains this would be unaffordable, here it's the whole product.
 
 - **Live dashboard:** https://zoetra.vercel.app/live
 - **Contract (BOT Chain testnet, chain 968):** [`0x32550FbbB458380e2A198E97dABcc70fEe95b8E6`](https://scan.bohr.life/address/0x32550FbbB458380e2A198E97dABcc70fEe95b8E6)

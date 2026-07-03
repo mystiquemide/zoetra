@@ -11,7 +11,8 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 
 export const metadata: Metadata = {
   title: "Zoetra — Uptime you can slash",
-  description: "On-chain heartbeat SLA registry for DePIN devices on BOT Chain.",
+  description:
+    "The first permissionless, chain-native SLA layer for DePIN. Open to any device from any network, only possible on BOT Chain.",
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
