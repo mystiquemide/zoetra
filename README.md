@@ -94,7 +94,7 @@ npm run dev
 ## What's real vs. what's a placeholder
 
 - Contract, deployment, all three devices, every heartbeat, and the one slash referenced in the demo video are real transactions on BOT Chain testnet, verifiable at [scan.bohr.life](https://scan.bohr.life/address/0x32550FbbB458380e2A198E97dABcc70fEe95b8E6).
-- No WalletConnect connector is configured on purpose. RainbowKit's default config requires a real WalletConnect Cloud project id even to boot, and without one its SDK throws a console error every load trying to fetch remote config for a fake id. Wallet support is injected-only (MetaMask, Coinbase extension, Rabby, Brave, etc.), which needs no project id and no remote fetch. Add a real WalletConnect Cloud project and swap `src/lib/web3.ts` back to `getDefaultConfig` for QR-code/mobile wallet support.
+- Wallet support covers both injected extensions (MetaMask, Coinbase extension, Rabby, Brave, etc.) and WalletConnect for mobile-only wallets, including **BO Wallet**, the native BOT Chain wallet listed in BOT Chain's own dev docs alongside MetaMask. BO Wallet has no browser extension, so WalletConnect QR pairing is the only way to connect it. WalletConnect runs on a real project registered at cloud.reown.com, not a placeholder id.
 - `npm audit` reports vulnerabilities in the RainbowKit/Hardhat dependency trees. All fixes require `--force` and risk breaking wallet connect or the build right before submission, so they're deliberately left unpatched rather than risking a regression under deadline. None are in code this project's contract or daemon logic touches directly.
 
 ## Roadmap

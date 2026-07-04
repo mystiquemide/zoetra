@@ -5,7 +5,7 @@ export const botChainTestnet = defineChain({
   name: "BOT Chain Testnet",
   nativeCurrency: { name: "BOT", symbol: "BOT", decimals: 18 },
   rpcUrls: { default: { http: ["https://rpc.bohr.life"] } },
-  blockExplorers: { default: { name: "Bohr Scan", url: "https://scan.bohr.life" } },
+  blockExplorers: { default: { name: "BOTScan", url: "https://scan.bohr.life" } },
   testnet: true,
 })
 
@@ -16,7 +16,7 @@ export const botChainMainnet = defineChain({
   rpcUrls: {
     default: { http: ["https://rpc.botchain.ai"], webSocket: ["wss://ws-rpc.botchain.ai"] },
   },
-  blockExplorers: { default: { name: "BOT Scan", url: "https://scan.botchain.ai" } },
+  blockExplorers: { default: { name: "BOTScan", url: "https://scan.botchain.ai" } },
 })
 
 export const activeChain =

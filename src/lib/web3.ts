@@ -1,24 +1,31 @@
 import { connectorsForWallets } from "@rainbow-me/rainbowkit"
-import { injectedWallet, coinbaseWallet } from "@rainbow-me/rainbowkit/wallets"
+import { injectedWallet, coinbaseWallet, metaMaskWallet, walletConnectWallet } from "@rainbow-me/rainbowkit/wallets"
 import { createConfig, http } from "wagmi"
 import { botChainTestnet, botChainMainnet } from "@/lib/chains"
 
-// Deliberately no WalletConnect connector. RainbowKit's getDefaultConfig
-// requires a real WalletConnect Cloud project id even to boot; without one
-// (and we don't have a registered project) its SDK throws a console error on
-// every page load trying to fetch remote config for a fake id. Injected
-// wallets (MetaMask, Coinbase extension, Rabby, Brave, etc.) need no project
-// id and no remote fetch at all, and cover the entire demo flow.
+// Real WalletConnect Cloud project (cloud.reown.com), registered specifically
+// to support BO Wallet, the mobile-only wallet BOT Chain's own dev docs list
+// alongside MetaMask. BO Wallet has no browser extension, so it can only
+// connect via WalletConnect QR pairing, not injection. Previously this app
+// shipped a fake placeholder project id, which threw a console error on every
+// load trying to fetch remote config; a real registered id has no such issue.
+const WALLETCONNECT_PROJECT_ID =
+  process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || "59c1f24b65c637cdc0c8f94240b74bd6"
+
 const connectors = connectorsForWallets(
   [
     {
       groupName: "Installed",
-      wallets: [injectedWallet, coinbaseWallet],
+      wallets: [injectedWallet, metaMaskWallet, coinbaseWallet],
+    },
+    {
+      groupName: "Mobile",
+      wallets: [walletConnectWallet], // scan-to-connect: BO Wallet, Trust Wallet, Rainbow mobile, etc.
     },
   ],
   {
     appName: "Zoetra",
-    projectId: "unused-no-walletconnect",
+    projectId: WALLETCONNECT_PROJECT_ID,
   }
 )
 

@@ -120,6 +120,7 @@ Wallet states handled: disconnected (read-only dashboard still fully live), wron
 
 ```
 NEXT_PUBLIC_CHAIN=testnet            # testnet | mainnet
+NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=   # cloud.reown.com project, powers BO Wallet + mobile QR pairing
 NEXT_PUBLIC_REGISTRY_ADDRESS_TESTNET=
 NEXT_PUBLIC_REGISTRY_ADDRESS_MAINNET=
 DEPLOYER_PRIVATE_KEY=                # contracts/ only
@@ -135,4 +136,4 @@ RPC_URL= PRIVATE_KEY= DEVICE_ID= INTERVAL_MS=   # daemon only
 5. Testnet 968 primary, mainnet 677 optional at E3. Reason: free faucet gas for thousands of beats; identical bytecode either way; rules accept testnet explicitly.
 6. Per-device interval on-chain (5s demo, 30s steady). Reason: demo drama and gas economy are both first-class, chosen per device, no redeploys.
 7. One stateless serverless route (`/api/alert`) as the sole exception to "no backend," added post-launch for optional breach webhook alerts. Reason: it holds no data (webhook URL lives in localStorage, not a database) and reads nothing from the chain, it only relays a breach the client already detected from its own on-chain reads. Cost: technically a server-side code path exists now; mitigated by keeping it single-purpose, stateless, and never given database or chain-write access.
-8. Injected-wallet-only connector, no WalletConnect. Reason: without a real registered WalletConnect Cloud project (which we don't have), RainbowKit's default config throws a console error on every load trying to fetch remote config for a placeholder project id, a bad look for anyone opening devtools. `connectorsForWallets` with just `injectedWallet`/`coinbaseWallet` needs no project id and no remote fetch, and covers the full register/slash demo (MetaMask, Coinbase extension, Rabby, Brave). Cost: no QR-code/mobile-wallet flow until a real WalletConnect project is registered and `getDefaultConfig` is restored.
+8. Injected wallets + WalletConnect via a real registered project. Initially shipped injected-only (MetaMask, Coinbase extension, Rabby, Brave) because a placeholder WalletConnect project id made RainbowKit's SDK throw a console error every load. Reversed once a real project was registered at cloud.reown.com specifically to support BO Wallet, the mobile-only wallet BOT Chain's own dev docs list alongside MetaMask, since BO Wallet has no browser extension and can only connect via WalletConnect QR pairing. Verified via network requests that the SDK reaches `pulse.walletconnect.org` with the real project id (202 response), not the placeholder-id error from before.

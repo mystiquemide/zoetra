@@ -5,7 +5,7 @@ const path = require("path");
 const hre = require("hardhat");
 
 const SECRETS_DIR = path.join(__dirname, "..", "..", ".secrets");
-const TOPUP_AMOUNT = "2.5";
+const TOPUP_AMOUNT = "3.0";
 const DEVICE_KEYS = ["device-a", "device-b", "device-c"];
 
 function readEnvFile(filePath) {

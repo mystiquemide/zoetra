@@ -14,7 +14,7 @@ const STEPS = [
   {
     icon: ExternalLink,
     title: "Don't trust the dashboard, check the explorer",
-    body: "Click any tx hash in the event feed or the verification panel's explorer link. Every beat you saw client-side is independently visible on Bohr Scan.",
+    body: "Click any tx hash in the event feed or the verification panel's explorer link. Every beat you saw client-side is independently visible on BOTScan.",
   },
   {
     icon: Terminal,
