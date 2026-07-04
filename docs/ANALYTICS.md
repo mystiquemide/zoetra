@@ -1,6 +1,6 @@
 # Zoetra — Analytics Spec
 
-No third-party analytics, no tracking, no PII. Every metric derives from chain events, which makes the analytics layer itself judge-verifiable. The dashboard is the analytics product.
+No third-party analytics, no tracking, no PII. Every metric derives from chain events, which makes the analytics layer itself independently verifiable. The dashboard is the analytics product.
 
 ## Metric schema (all computed client-side from events/views)
 
@@ -11,12 +11,12 @@ No third-party analytics, no tracking, no PII. Every metric derives from chain e
 | Per-device score (bps) | `scoreOf(id)` poll 2s | DeviceCard |
 | Score history sparkline | client ring buffer of score samples (last ~40) | DeviceCard |
 | Slashes executed / BOT burned | `Slashed` events, sum `amount - bounty` | StatsStrip, feed |
-| Beat confirm latency | daemon log: send → receipt (off-chain, quoted in README/video) | submission write-up |
+| Beat confirm latency | daemon log: send → receipt (off-chain, quoted in README) | README |
 | Block height / chain health | `eth_blockNumber` poll | chain badge |
 
-## Judge-facing KPI targets (from PRD)
-- ≥ 1,000 real `Beat` transactions before demo recording
-- Kill-to-visible-decay < 15s on camera
+## KPI targets (from PRD)
+- ≥ 1,000 real `Beat` transactions
+- Kill-to-visible-decay < 15s
 - ≥ 1 on-chain `Slashed` event executed live
 - 100% of dashboard numbers reproducible from scan.bohr.life alone
 

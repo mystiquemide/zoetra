@@ -86,7 +86,7 @@ Properties: full uptime holds ~10000 bps; a killed device visibly decays within 
 - Checks-effects-interactions everywhere; stake transfers last; no reentrancy surface beyond `withdraw`/`slash` transfers (state zeroed/decremented before send)
 - `call{value:}` with success require, no `transfer`
 - Slash bounty caps griefing: caller pays gas, gets bounty only on a genuinely breached device; cooldown prevents slash-draining in one block
-- No owner/admin functions at all: nothing to rug, nothing to audit-flag; constants are immutable by design (hackathon scope, honest tradeoff documented in README)
+- No owner/admin functions at all: nothing to rug, nothing to audit-flag; constants are immutable by design (a deliberate v1 tradeoff, documented in the roadmap)
 - Operator key on devices holds only faucet dust + its own stake
 
 ## Daemon (`daemon/heartbeat.mjs`)
@@ -129,11 +129,11 @@ RPC_URL= PRIVATE_KEY= DEVICE_ID= INTERVAL_MS=   # daemon only
 
 ## ADRs
 
-1. No database, chain-only reads. Reason: integration score, zero infra, every number judge-verifiable. Cost: history limited to RPC log range; acceptable, Blockscout API is the fallback for deep history.
-2. Two-bucket sliding window on-chain instead of ring buffer. Reason: O(1) storage and gas per beat; visible decay and recovery; ring buffer gas cost buys nothing the demo needs.
+1. No database, chain-only reads. Reason: zero infra, every number independently verifiable. Cost: history limited to RPC log range; acceptable, Blockscout API is the fallback for deep history.
+2. Two-bucket sliding window on-chain instead of ring buffer. Reason: O(1) storage and gas per beat; visible decay and recovery; a ring buffer's extra gas cost buys nothing the product needs.
 3. Native BOT stake, no ERC-20. Reason: one fewer contract, one fewer approval step, faucet-fundable.
-4. Permissionless slash with bounty. Reason: turns the trust model into a market and gives the demo its second actor; judges can slash from their own wallet.
-5. Testnet 968 primary, mainnet 677 optional at E3. Reason: free faucet gas for thousands of beats; identical bytecode either way; rules accept testnet explicitly.
-6. Per-device interval on-chain (5s demo, 30s steady). Reason: demo drama and gas economy are both first-class, chosen per device, no redeploys.
-7. One stateless serverless route (`/api/alert`) as the sole exception to "no backend," added post-launch for optional breach webhook alerts. Reason: it holds no data (webhook URL lives in localStorage, not a database) and reads nothing from the chain, it only relays a breach the client already detected from its own on-chain reads. Cost: technically a server-side code path exists now; mitigated by keeping it single-purpose, stateless, and never given database or chain-write access.
+4. Permissionless slash with bounty. Reason: turns the trust model into a market; anyone can slash a breached device from their own wallet.
+5. Testnet 968 primary, mainnet 677 optional. Reason: free faucet gas for thousands of beats during early iteration; identical bytecode either way.
+6. Per-device interval on-chain (5s for the live devices, 30s for steady-state). Reason: interval is chosen per device with no redeploy needed, so gas economy and responsiveness are both tunable.
+7. One stateless serverless route (`/api/alert`) as the sole exception to "no backend," added for optional breach webhook alerts. Reason: it holds no data (webhook URL lives in localStorage, not a database) and reads nothing from the chain, it only relays a breach the client already detected from its own on-chain reads. Cost: technically a server-side code path exists now; mitigated by keeping it single-purpose, stateless, and never given database or chain-write access.
 8. Injected wallets + WalletConnect via a real registered project. Initially shipped injected-only (MetaMask, Coinbase extension, Rabby, Brave) because a placeholder WalletConnect project id made RainbowKit's SDK throw a console error every load. Reversed once a real project was registered at cloud.reown.com specifically to support BO Wallet, the mobile-only wallet BOT Chain's own dev docs list alongside MetaMask, since BO Wallet has no browser extension and can only connect via WalletConnect QR pairing. Verified via network requests that the SDK reaches `pulse.walletconnect.org` with the real project id (202 response), not the placeholder-id error from before.

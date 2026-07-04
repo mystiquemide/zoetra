@@ -20,7 +20,7 @@ Note on positioning: research (Jul 3-4) found adjacent claims in this space, not
 
 1. Device operator — registers a device, runs the heartbeat daemon, stakes BOT on an SLA target, withdraws stake on clean exit.
 2. Verifier (anyone) — watches scores, verifies beats on Blockscout, calls slash() on breached devices, earns a slash bounty.
-3. Observer / judge — reads the live dashboard, cross-checks any beat or slash against the explorer without trusting Zoetra's UI.
+3. Observer — reads the live dashboard, cross-checks any beat or slash against the explorer without trusting Zoetra's UI.
 
 ## Core Features
 
@@ -56,7 +56,7 @@ US1: As an operator, I register a device with 0.5 BOT stake, 15s interval, 90% S
 US2: As an operator, my running daemon keeps my score at 100%.
 - AC: with daemon running at interval i, score stays ≥ 9900 bps over any 5-minute stretch; each beat visible on Blockscout in <2s.
 
-US3: As a judge, I watch a killed device bleed.
+US3: As an observer, I watch a killed device bleed.
 - AC: after daemon SIGKILL, score drops below 90% threshold within 10 missed beats; dashboard reflects each drop without page refresh.
 
 US4: As a verifier, I slash a breached device and get paid.
@@ -76,29 +76,25 @@ US5: As an operator, I withdraw remaining stake after deregistering.
 | Slash-from-UI | 8 | 8 | 8 | 1h | must | build |
 | Score history via Blockscout API | 6 | 5 | 7 | 2h | should | build if time |
 | Multi-window analytics page | 3 | 3 | 6 | 3h | won't | cut |
-| SLA insurance market | 2 | 8 | 3 | days | won't | post-hackathon |
+| SLA insurance market | 2 | 8 | 3 | days | won't | later |
 
-## KPIs (judge-facing proof)
+## KPIs (independently verifiable)
 
-- 3 real devices beating live at submission time
-- ≥ 1,000 real heartbeat txs on chain 677 by demo recording
-- Kill-to-visible-decay latency < 15s on camera
-- 1 on-chain slash executed live in the demo
+- 3 real devices beating live
+- ≥ 1,000 real heartbeat txs on chain 677
+- Kill-to-visible-decay latency < 15s
+- On-chain slashes executed live, not simulated
 - Every dashboard number reproducible from scan.botchain.ai alone
 
-## Out of Scope
+## Out of Scope (for now)
 
-- Insurance/coverage market on top of SLAs (the startup story, tell it, don't build it)
+- Insurance/coverage market on top of SLAs (see roadmap)
 - Device hardware attestation (TEE, signed sensor data)
-- Database persistence, auth, Prisma (strip from boilerplate)
-- Testnet/mainnet dual deploys; one network, decided by Telegram RPC answer
-- Token, governance, bridge anything
+- Database persistence, auth
+- Token, governance, bridge functionality
 
-## Submission Checklist (product-level)
+## Launch Checklist (product-level)
 
 - Contract address + verified source on scan.botchain.ai
 - GitHub repo public, README with run-it-yourself path
 - Live dashboard on Vercel
-- Demo video with the kill scene
-- X post tagging @BOTChain_ai
-- 2–3 bounty reports filed separately (docs discoverability, faucet page network info)

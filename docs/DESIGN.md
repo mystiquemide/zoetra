@@ -87,7 +87,7 @@ Top to bottom inside the card:
 
 ### Demo (`/demo`)
 
-A static, numbered walkthrough (`FileSignature`... actually icons: `Eye`, `ExternalLink`, `Terminal`, `TrendingDown`, `PowerOff`, `Wallet`, `Scissors`) mirroring the exact recording script below. Two CTAs at top (Live dashboard, contract on explorer). Exists so a judge can self-serve verification without waiting for the video.
+A static, numbered walkthrough (icons: `Eye`, `ExternalLink`, `Terminal`, `TrendingDown`, `PowerOff`, `Wallet`, `Scissors`) mirroring the exact verification script below. Two CTAs at top (Live dashboard, contract on explorer). Exists so anyone can self-serve verification without watching a recording.
 
 ## RegisterModal
 
