@@ -4,22 +4,22 @@ import { useState } from "react"
 import { parseEther } from "viem"
 import { useAccount, useWriteContract } from "wagmi"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { FileSignature } from "lucide-react"
 import { Modal } from "@/components/ui/modal"
 import { Button } from "@/components/ui/button"
 import { useToast } from "@/components/ui/toast"
+import { friendlyError } from "@/lib/friendly-error"
 import { activeChain } from "@/lib/chains"
 import { REGISTRY_ADDRESS, registryAbi, MIN_STAKE_BOT } from "@/lib/registry"
 import { cn } from "@/lib/utils"
 
 const PRESETS = [
-  { label: "Critical sensor", interval: 5, sla: 99, hint: "high-value DePIN node" },
-  { label: "Standard node", interval: 15, sla: 95, hint: "general infrastructure" },
-  { label: "Low-power device", interval: 60, sla: 90, hint: "battery / IoT device" },
+  { label: "Critical sensor", interval: 5, sla: 99 },
+  { label: "Standard node", interval: 15, sla: 95 },
+  { label: "Low-power device", interval: 60, sla: 90 },
 ] as const
 
 export function RegisterModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const { isConnected, chain } = useAccount()
+  const { address, isConnected, chain } = useAccount()
   const { writeContractAsync, isPending } = useWriteContract()
   const { toast } = useToast()
 
@@ -44,12 +44,15 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
       toast(`Registered: ${hash.slice(0, 10)}...`, "success")
       onClose()
     } catch (err) {
-      toast(err instanceof Error ? err.message : "Registration failed", "error")
+      toast(friendlyError(err, "Registration failed. Check your stake covers the minimum and try again."), "error")
     }
   }
 
+  const labelClass = "flex flex-col gap-1.5 text-xs font-semibold text-z-text-dim"
+
   return (
-    <Modal open={open} onClose={onClose} title="Register a device">
+    <Modal open={open} onClose={onClose} title="Register device">
+      <p className="mb-5 text-[13px] text-z-text-dim">Put stake behind a heartbeat promise.</p>
       {!isConnected ? (
         <div className="flex flex-col items-center gap-4 py-6">
           <p className="text-sm text-z-text-dim">Connect a wallet to register a device.</p>
@@ -62,8 +65,8 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
-            <span className="text-sm text-z-text-dim">Presets</span>
+          <div className={labelClass}>
+            Presets
             <div className="grid grid-cols-3 gap-2">
               {PRESETS.map((preset) => (
                 <button
@@ -74,10 +77,10 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
                     setSla(preset.sla)
                   }}
                   className={cn(
-                    "rounded-lg border px-2 py-2 text-left text-xs transition-colors",
+                    "rounded-lg border px-2 py-2 text-left text-xs font-normal transition-colors",
                     interval === preset.interval && sla === preset.sla
-                      ? "border-z-accent bg-z-accent/10 text-z-text"
-                      : "border-z-border text-z-text-dim hover:border-z-accent/50"
+                      ? "border-z-alive bg-z-alive/10 text-z-text"
+                      : "border-z-border text-z-text-dim hover:border-z-alive/50"
                   )}
                 >
                   <div className="font-medium">{preset.label}</div>
@@ -87,40 +90,42 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
             </div>
           </div>
 
-          <label className="flex flex-col gap-1 text-sm text-z-text-dim">
+          <label className={labelClass}>
             Device name
             <input
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="rounded-lg border border-z-border bg-z-surface-2 px-3 py-2 font-mono text-sm text-z-text outline-none focus:border-z-accent"
-              placeholder="warehouse-sensor-04"
+              className="rounded-lg border border-z-border bg-z-surface-2 px-3 py-2.5 font-mono text-sm font-normal text-z-text outline-none focus:border-z-alive"
+              placeholder="Cloud Node A"
             />
           </label>
 
-          <label className="flex flex-col gap-1 text-sm text-z-text-dim">
-            Heartbeat interval: <span className="font-mono text-z-text">{interval}s</span>
+          <label className={labelClass}>
+            Heartbeat interval, selected <span className="font-mono text-z-text">{interval}s</span>
             <input
               type="range"
               min={5}
               max={300}
               value={interval}
               onChange={(e) => setInterval_(Number(e.target.value))}
+              className="accent-z-alive"
             />
           </label>
 
-          <label className="flex flex-col gap-1 text-sm text-z-text-dim">
-            SLA threshold: <span className="font-mono text-z-text">{sla}%</span>
+          <label className={labelClass}>
+            SLA, selected <span className="font-mono text-z-text">{sla}%</span>
             <input
               type="range"
               min={50}
               max={99}
               value={sla}
               onChange={(e) => setSla(Number(e.target.value))}
+              className="accent-z-alive"
             />
           </label>
 
-          <label className="flex flex-col gap-1 text-sm text-z-text-dim">
+          <label className={labelClass}>
             Stake (BOT, min {MIN_STAKE_BOT})
             <input
               required
@@ -129,13 +134,18 @@ export function RegisterModal({ open, onClose }: { open: boolean; onClose: () =>
               min={MIN_STAKE_BOT}
               value={stake}
               onChange={(e) => setStake(e.target.value)}
-              className="rounded-lg border border-z-border bg-z-surface-2 px-3 py-2 font-mono text-sm text-z-text outline-none focus:border-z-accent"
+              className="rounded-lg border border-z-border bg-z-surface-2 px-3 py-2.5 font-mono text-sm font-normal text-z-text outline-none focus:border-z-alive"
             />
           </label>
 
-          <Button type="submit" disabled={isPending} className="gap-2">
-            <FileSignature className="h-4 w-4" />
-            {isPending ? "Registering..." : "Register on-chain"}
+          {address && (
+            <p className="text-xs text-z-text-dim">
+              Connected to {activeChain.name} as {address.slice(0, 6)}...{address.slice(-4)}
+            </p>
+          )}
+
+          <Button type="submit" disabled={isPending}>
+            {isPending ? "Registering..." : "Register device"}
           </Button>
         </form>
       )}

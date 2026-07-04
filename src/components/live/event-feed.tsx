@@ -14,7 +14,7 @@ const iconFor = {
 const colorFor = {
   beat: "text-z-alive",
   slashed: "text-z-bleed",
-  registered: "text-z-accent",
+  registered: "text-z-alive",
 }
 
 export function EventFeed({ entries }: { entries: FeedEntry[] }) {
@@ -39,7 +39,7 @@ export function EventFeed({ entries }: { entries: FeedEntry[] }) {
             </div>
             <Link
               href={`/tx/${entry.txHash}`}
-              className="shrink-0 font-mono text-xs text-z-accent hover:underline"
+              className="shrink-0 font-mono text-xs text-z-alive hover:underline"
             >
               {entry.txHash.slice(0, 8)}
             </Link>

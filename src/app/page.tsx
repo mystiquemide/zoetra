@@ -1,13 +1,20 @@
 import { Hero } from "@/components/landing/hero"
-import { Features } from "@/components/landing/features"
-import { CTA } from "@/components/landing/cta"
+import { VerifyStrip } from "@/components/landing/verify-strip"
+import { ChainStatement, BountyStatement } from "@/components/landing/statement"
+import { HowItWorks } from "@/components/landing/how-it-works"
+import { LiveProofCta } from "@/components/landing/live-proof-cta"
+import { LandingFooter } from "@/components/landing/footer"
 
 export default function Home() {
   return (
-    <main>
+    <>
       <Hero />
-      <Features />
-      <CTA />
-    </main>
+      <VerifyStrip />
+      <ChainStatement />
+      <HowItWorks />
+      <BountyStatement />
+      <LiveProofCta />
+      <LandingFooter />
+    </>
   )
 }

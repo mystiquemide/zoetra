@@ -34,35 +34,35 @@ export default async function TxPage({ params }: { params: Promise<{ hash: strin
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <Link href="/live" className="inline-flex items-center gap-1.5 text-sm text-z-text-dim hover:text-z-text">
-        <ArrowLeft className="h-3.5 w-3.5" /> Back to live devices
+      <Link href="/live" className="inline-flex items-center gap-1.5 text-sm text-z-alive hover:underline">
+        <ArrowLeft className="h-3.5 w-3.5" /> Back to live dashboard
       </Link>
 
-      <div className="mt-4 flex items-center gap-2">
-        {success ? (
-          <CheckCircle2 className="h-5 w-5 text-z-alive" />
-        ) : (
-          <XCircle className="h-5 w-5 text-z-bleed" />
-        )}
-        <h1 className="font-mono text-lg text-z-text">{hash.slice(0, 10)}...{hash.slice(-8)}</h1>
+      <div className="mt-6 flex flex-wrap items-center gap-3.5">
+        <span
+          className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-[13px] font-semibold ${
+            success ? "bg-z-alive/[0.14] text-z-alive" : "bg-z-bleed/[0.14] text-z-bleed"
+          }`}
+        >
+          {success ? <CheckCircle2 className="h-[15px] w-[15px]" /> : <XCircle className="h-[15px] w-[15px]" />}
+          {success ? "Success" : `Failed${tx.revert_reason ? `: ${tx.revert_reason}` : ""}`}
+        </span>
+        <span className="font-mono text-sm text-z-text-dim">{hash.slice(0, 8)}...{hash.slice(-6)}</span>
         <CopyButton value={hash} />
       </div>
-      <p className={success ? "text-sm text-z-alive" : "text-sm text-z-bleed"}>
-        {success ? "Success" : `Failed${tx.revert_reason ? `: ${tx.revert_reason}` : ""}`}
-      </p>
 
       <Card className="mt-6 border-z-border bg-z-surface">
         <div className="grid gap-3 font-mono text-xs">
           <Row label="Block">{tx.block_number.toLocaleString()}</Row>
           <Row label="Timestamp">{new Date(tx.timestamp).toLocaleString()}</Row>
           <Row label="From">
-            <Link href={`/address/${tx.from.hash}`} className="text-z-accent hover:underline">
+            <Link href={`/address/${tx.from.hash}`} className="text-z-alive hover:underline">
               {tx.from.hash.slice(0, 10)}...{tx.from.hash.slice(-6)}
             </Link>
           </Row>
           {tx.to && (
             <Row label="To">
-              <Link href={`/address/${tx.to.hash}`} className="text-z-accent hover:underline">
+              <Link href={`/address/${tx.to.hash}`} className="text-z-alive hover:underline">
                 {tx.to.hash.slice(0, 10)}...{tx.to.hash.slice(-6)}
               </Link>
               {tx.to.is_contract && <span className="ml-2 text-z-text-dim">(contract)</span>}
@@ -93,7 +93,7 @@ export default async function TxPage({ params }: { params: Promise<{ hash: strin
               const Icon = EVENT_ICON[decoded!.eventName as keyof typeof EVENT_ICON] ?? Activity
               return (
                 <div key={log.index} className="flex items-center gap-2 text-sm">
-                  <Icon className="h-4 w-4 shrink-0 text-z-accent" />
+                  <Icon className="h-4 w-4 shrink-0 text-z-alive" />
                   <span className="font-mono text-z-text">{decoded!.summary}</span>
                 </div>
               )
@@ -106,9 +106,9 @@ export default async function TxPage({ params }: { params: Promise<{ hash: strin
         href={explorerTxUrl(hash)}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-6 inline-flex items-center gap-1.5 text-xs text-z-text-dim hover:text-z-text"
+        className="mt-6 inline-flex items-center gap-1.5 text-[13px] text-z-text-dim hover:text-z-text"
       >
-        View on {activeChain.blockExplorers.default.name} <ExternalLink className="h-3 w-3" />
+        View on {activeChain.blockExplorers.default.name} <ExternalLink className="h-3.5 w-3.5" />
       </a>
     </div>
   )

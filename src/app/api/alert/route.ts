@@ -62,7 +62,10 @@ export async function POST(req: NextRequest) {
     })
     return NextResponse.json({ ok: upstream.ok, status: upstream.status })
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to reach webhook"
-    return NextResponse.json({ ok: false, error: message }, { status: 502 })
+    console.error("alert relay failed:", err)
+    return NextResponse.json(
+      { ok: false, error: "Could not reach that webhook URL. Check it's correct and try again." },
+      { status: 502 }
+    )
   }
 }

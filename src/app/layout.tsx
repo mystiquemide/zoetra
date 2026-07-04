@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import { Nav } from "@/components/layout/nav"
 import { Footer } from "@/components/layout/footer"
+import { MainOffset } from "@/components/layout/main-offset"
 import { ToastProvider } from "@/components/ui/toast"
 import { Web3Provider } from "@/components/web3/web3-provider"
 
@@ -22,7 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Web3Provider>
           <ToastProvider>
             <Nav />
-            <main className="flex-1 pt-16">{children}</main>
+            <MainOffset>{children}</MainOffset>
             <Footer />
           </ToastProvider>
         </Web3Provider>

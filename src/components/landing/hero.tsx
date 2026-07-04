@@ -1,36 +1,56 @@
 import Link from "next/link"
-import { ArrowRight, ExternalLink } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import Image from "next/image"
+import { ArrowRight, Code2 } from "lucide-react"
 
 export function Hero() {
   return (
-    <section className="relative pt-16 pb-20 px-4">
-      <div className="mx-auto max-w-4xl text-center">
-        <p className="text-sm font-medium uppercase tracking-wide text-z-accent">
-          A permissionless SLA registry for DePIN
-        </p>
-        <h1 className="mt-3 text-5xl font-bold tracking-tight text-z-text sm:text-6xl">
-          Uptime you can slash.
-        </h1>
-        <p className="mt-6 text-lg text-z-text-dim max-w-2xl mx-auto">
-          Most DePIN uptime systems are closed. Zoetra is open to any device, from any
-          network: no backend, no admin, uptime scored live on-chain from block.timestamp
-          alone, and anyone can slash a breached SLA and earn the bounty. Only possible on
-          BOT Chain, fast and cheap enough to make a heartbeat a real transaction.
-        </p>
-        <div className="mt-8 flex items-center justify-center gap-4">
-          <Link href="/live">
-            <Button size="lg" className="gap-2">
-              Live dashboard <ArrowRight className="h-4 w-4" />
-            </Button>
+    <div
+      className="relative bg-cover bg-[position:center_30%] rounded-b-3xl overflow-hidden"
+      style={{ backgroundImage: "url('/design/hero-network.jpg')" }}
+    >
+      <nav className="relative z-10 flex items-center justify-between px-6 py-4 sm:px-12">
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image src="/design/zoetra-logo.png" alt="Zoetra" width={28} height={28} className="h-7 w-7 object-contain" />
+          <span className="text-[17px] font-semibold tracking-tighter text-z-text">
+            <span className="text-z-alive">Zoe</span>tra
+          </span>
+        </Link>
+        <div className="flex items-center gap-8">
+          <Link href="/live" className="text-sm font-medium text-z-alive">
+            Live dashboard
           </Link>
-          <a href="https://github.com/mystiquemide/zoetra" target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" size="lg" className="gap-2">
-              <ExternalLink className="h-4 w-4" /> GitHub
-            </Button>
+          <Link href="/demo" className="text-sm font-medium text-z-alive">
+            Demo
+          </Link>
+        </div>
+      </nav>
+
+      <section className="mx-auto flex max-w-6xl flex-col items-center px-6 pb-20 pt-6 text-center sm:px-12">
+        <h1 className="mb-7 text-[15vw] font-semibold leading-[0.94] tracking-tighter text-z-text drop-shadow-[0_2px_32px_rgba(0,0,0,0.6)] sm:text-7xl md:text-8xl">
+          <span className="text-z-alive">Uptime</span> you
+          <br />
+          can <span className="text-z-alive">slash</span>.
+        </h1>
+        <p className="mb-9 max-w-md rounded-xl bg-z-bg/45 px-4 py-3 text-[17px] leading-relaxed tracking-tight text-z-text backdrop-blur-sm">
+          A permissionless, on-chain heartbeat SLA registry for DePIN devices.
+        </p>
+        <div className="flex flex-wrap justify-center gap-3.5">
+          <Link
+            href="/live"
+            className="flex items-center gap-2 rounded-xl bg-z-alive px-6 py-3.5 text-[15px] font-semibold text-z-bg"
+          >
+            Live dashboard <ArrowRight className="h-4 w-4" />
+          </Link>
+          <a
+            href="https://github.com/mystiquemide/zoetra"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-xl border border-z-text/30 bg-z-text/10 px-6 py-3.5 text-[15px] font-semibold text-z-text backdrop-blur-sm"
+          >
+            <Code2 className="h-4 w-4" /> Source code
           </a>
         </div>
-      </div>
-    </section>
+      </section>
+    </div>
   )
 }

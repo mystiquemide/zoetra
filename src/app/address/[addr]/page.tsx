@@ -44,20 +44,30 @@ export default async function AddressPage({ params }: { params: Promise<{ addr: 
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <Link href="/live" className="inline-flex items-center gap-1.5 text-sm text-z-text-dim hover:text-z-text">
-        <ArrowLeft className="h-3.5 w-3.5" /> Back to live devices
+      <Link href="/live" className="inline-flex items-center gap-1.5 text-sm text-z-alive hover:underline">
+        <ArrowLeft className="h-3.5 w-3.5" /> Back to live dashboard
       </Link>
 
-      <div className="mt-4 flex items-center gap-2">
-        <h1 className="font-mono text-lg text-z-text">{addr.slice(0, 10)}...{addr.slice(-8)}</h1>
-        <CopyButton value={addr} />
-      </div>
-      <p className="font-mono text-sm text-z-text-dim">
-        {balance} BOT {addressInfo?.is_contract && "· contract"}
-      </p>
+      <Card className="mt-5 flex flex-wrap items-center justify-between gap-4 border-z-border bg-z-surface">
+        <div>
+          <div className="mb-2 text-[11px] font-semibold uppercase tracking-[0.1em] text-z-alive">Address</div>
+          <div className="flex items-center gap-2.5">
+            <span className="font-mono text-lg font-semibold text-z-alive">
+              {addr.slice(0, 8)}...{addr.slice(-6)}
+            </span>
+            <CopyButton value={addr} className="text-z-text-dim hover:text-z-text" />
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-z-text-dim">Balance</div>
+          <div className="font-mono text-xl font-semibold text-z-alive">
+            {balance} BOT {addressInfo?.is_contract && <span className="text-sm text-z-text-dim">· contract</span>}
+          </div>
+        </div>
+      </Card>
 
       {operated && (
-        <Card className="mt-6 border-z-accent/40 bg-z-surface">
+        <Card className="mt-6 border-z-alive/40 bg-z-surface">
           <CardHeader>
             <CardTitle>Operates device #{operated.id.toString()}</CardTitle>
           </CardHeader>
@@ -73,7 +83,7 @@ export default async function AddressPage({ params }: { params: Promise<{ addr: 
 
       <Card className="mt-4 border-z-border bg-z-surface">
         <CardHeader>
-          <CardTitle>Recent activity</CardTitle>
+          <CardTitle>Activity</CardTitle>
         </CardHeader>
         {txs.length === 0 ? (
           <p className="text-sm text-z-text-dim">No transactions observed yet.</p>
@@ -89,10 +99,10 @@ export default async function AddressPage({ params }: { params: Promise<{ addr: 
                   className="flex items-center justify-between gap-3 py-2.5 text-sm hover:bg-z-surface-2"
                 >
                   <div className="flex items-center gap-2 text-z-text-dim">
-                    <Icon className="h-3.5 w-3.5 text-z-accent" />
+                    <Icon className="h-3.5 w-3.5 text-z-alive" />
                     <span className="text-z-text">{decoded?.summary ?? "transaction"}</span>
                   </div>
-                  <span className="font-mono text-xs text-z-accent">{tx.hash.slice(0, 8)}</span>
+                  <span className="font-mono text-xs text-z-alive">{tx.hash.slice(0, 8)}</span>
                 </Link>
               )
             })}
@@ -104,9 +114,9 @@ export default async function AddressPage({ params }: { params: Promise<{ addr: 
         href={explorerAddressUrl(addr)}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-6 inline-flex items-center gap-1.5 text-xs text-z-text-dim hover:text-z-text"
+        className="mt-6 inline-flex items-center gap-1.5 text-[13px] text-z-text-dim hover:text-z-text"
       >
-        View on {activeChain.blockExplorers.default.name} <ExternalLink className="h-3 w-3" />
+        View on {activeChain.blockExplorers.default.name} <ExternalLink className="h-3.5 w-3.5" />
       </a>
     </div>
   )

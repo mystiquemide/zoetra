@@ -35,9 +35,9 @@ export function AlertsSettings() {
   }
 
   return (
-    <Card className="border-z-border bg-z-surface">
+    <Card className="border-z-border bg-z-surface p-5">
       <div className="mb-3 flex items-center gap-2 text-z-text">
-        <Bell className="h-4 w-4 text-z-accent" />
+        <Bell className="h-4 w-4 text-z-alive" />
         <span className="font-medium">Breach alerts</span>
       </div>
       <p className="mb-3 text-xs text-z-text-dim">
@@ -50,7 +50,7 @@ export function AlertsSettings() {
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="https://discord.com/api/webhooks/..."
-          className="flex-1 rounded-lg border border-z-border bg-z-surface-2 px-3 py-2 font-mono text-xs text-z-text outline-none focus:border-z-accent"
+          className="flex-1 rounded-lg border border-z-border bg-z-surface-2 px-3 py-2 font-mono text-xs text-z-text outline-none focus:border-z-alive"
         />
         <Button type="submit" size="sm" variant="outline" className="gap-1.5">
           {saved ? <Check className="h-3.5 w-3.5" /> : null}

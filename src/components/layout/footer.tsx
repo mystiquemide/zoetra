@@ -1,39 +1,42 @@
+"use client"
+
 import Link from "next/link"
-import { REGISTRY_ADDRESS } from "@/lib/registry"
+import Image from "next/image"
+import { usePathname } from "next/navigation"
 
 export function Footer() {
+  const pathname = usePathname()
+  // The landing page ships its own two-row footer (see components/landing/footer.tsx)
+  // matching Landing.dc.html; every other screen shares this simple one-row footer.
+  if (pathname === "/") return null
+
+  const links = [
+    { href: "/docs", label: "Docs" },
+    { href: "/terms", label: "Terms" },
+    { href: "/privacy", label: "Privacy" },
+  ]
+
   return (
-    <footer className="border-t border-z-border py-8">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 text-center text-sm text-z-text-dim sm:flex-row sm:justify-between">
-        <span>Zoetra &middot; permissionless uptime SLAs for DePIN devices</span>
-        <div className="flex items-center gap-4">
-          <a
-            href="https://github.com/mystiquemide/zoetra"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-z-text"
-          >
-            GitHub
-          </a>
-          <Link href={`/address/${REGISTRY_ADDRESS}`} className="hover:text-z-text">
-            Contract
-          </Link>
-          <a
-            href="https://dev-docs.botchain.ai/docs/Developers/quick-guide/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-z-text"
-          >
-            BOT Chain docs
-          </a>
-          <a
-            href="https://x.com/BOTChain_ai"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-z-text"
-          >
-            @BOTChain_ai
-          </a>
+    <footer className="border-t border-z-alive">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-12 py-8">
+        <div className="flex items-center gap-2.5">
+          <Image src="/design/zoetra-logo.png" alt="Zoetra" width={20} height={20} className="h-5 w-5 object-contain" />
+          <span className="text-[13px] text-z-alive">&copy; 2026 Zoetra. All rights reserved.</span>
+        </div>
+        <div className="flex flex-wrap gap-6">
+          {links.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className={
+                pathname === l.href
+                  ? "text-[13px] font-semibold text-z-text"
+                  : "text-[13px] text-z-alive"
+              }
+            >
+              {l.label}
+            </Link>
+          ))}
         </div>
       </div>
     </footer>

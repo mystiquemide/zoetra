@@ -7,7 +7,7 @@ import type { FeedEntry } from "@/hooks/use-live-feed"
 import { cn } from "@/lib/utils"
 
 const ICON = { beat: Activity, slashed: Scissors, registered: Plus }
-const COLOR = { beat: "text-z-alive", slashed: "text-z-bleed", registered: "text-z-accent" }
+const COLOR = { beat: "text-z-alive", slashed: "text-z-bleed", registered: "text-z-alive" }
 
 export function ProofTrail({ deviceId, entries }: { deviceId: bigint; entries: FeedEntry[] }) {
   const [open, setOpen] = useState(false)
@@ -33,7 +33,7 @@ export function ProofTrail({ deviceId, entries }: { deviceId: bigint; entries: F
                   <Icon className={cn("h-3 w-3", COLOR[e.kind])} />
                   <span>{e.detail}</span>
                 </div>
-                <Link href={`/tx/${e.txHash}`} className="font-mono text-z-accent hover:underline">
+                <Link href={`/tx/${e.txHash}`} className="font-mono text-z-alive hover:underline">
                   {e.txHash.slice(0, 8)}
                 </Link>
               </div>

@@ -1,7 +1,6 @@
 "use client"
 
 import { useBlockNumber } from "wagmi"
-import { Activity, Cpu, Scissors, Blocks } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { activeChain } from "@/lib/chains"
 
@@ -16,25 +15,20 @@ export function StatsStrip({ activeDevices, totalDevices, beats, slashes }: Stat
   const { data: blockNumber } = useBlockNumber({ chainId: activeChain.id, watch: true })
 
   const tiles = [
-    { label: "Heartbeats (session)", value: beats.toLocaleString(), icon: Activity },
-    { label: "Active devices", value: `${activeDevices}/${totalDevices}`, icon: Cpu },
-    { label: "Slashes executed", value: slashes.toLocaleString(), icon: Scissors },
-    {
-      label: `${activeChain.name} block`,
-      value: blockNumber ? blockNumber.toLocaleString() : "--",
-      icon: Blocks,
-    },
+    { label: "Heartbeats", value: beats.toLocaleString() },
+    { label: "Active", value: `${activeDevices} / ${totalDevices}` },
+    { label: "Slashes", value: slashes.toLocaleString(), color: slashes > 0 ? "text-z-bleed" : undefined },
+    { label: "Block", value: blockNumber ? blockNumber.toLocaleString() : "--" },
   ]
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
       {tiles.map((tile) => (
-        <Card key={tile.label} className="border-z-border bg-z-surface p-4">
-          <div className="flex items-center gap-2 text-z-text-dim">
-            <tile.icon className="h-4 w-4" />
-            <span className="text-xs">{tile.label}</span>
+        <Card key={tile.label} className="border-z-border bg-z-surface p-[18px]">
+          <div className="mb-2.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-z-text-dim">
+            {tile.label}
           </div>
-          <div className="mt-2 font-mono text-2xl font-semibold tabular-nums text-z-text">
+          <div className={`font-mono text-[26px] font-semibold ${tile.color ?? "text-z-text"}`}>
             {tile.value}
           </div>
         </Card>

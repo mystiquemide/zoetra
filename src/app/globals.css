@@ -6,6 +6,7 @@
   --z-surface-2: #1a1d26;
   --z-border: #232733;
   --z-text: #e8ebf1;
+  --z-text-soft: #c7ced9;
   --z-text-dim: #8b93a7;
   --z-alive: #2dd4a7;
   --z-bleed: #f4574d;
@@ -19,6 +20,7 @@
   --color-z-surface-2: var(--z-surface-2);
   --color-z-border: var(--z-border);
   --color-z-text: var(--z-text);
+  --color-z-text-soft: var(--z-text-soft);
   --color-z-text-dim: var(--z-text-dim);
   --color-z-alive: var(--z-alive);
   --color-z-bleed: var(--z-bleed);
@@ -66,4 +68,101 @@ body {
 
 .throb {
   animation: zoetra-throb 1.2s ease-in-out infinite;
+}
+
+@keyframes zt-wave-in {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) rotate(-4deg);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-5px) rotate(2deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
+}
+
+@keyframes zt-bounce-in {
+  0% {
+    opacity: 0;
+    transform: translateY(46px) scale(0.94);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-12px) scale(1.03);
+  }
+  78% {
+    transform: translateY(5px) scale(0.99);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes zt-shuffle-card {
+  0% {
+    opacity: 0;
+    transform: translateY(24px) rotate(0deg) scale(0.88);
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-8px) rotate(var(--rot)) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--rot)) scale(1);
+  }
+}
+
+@keyframes zt-chip-rotate {
+  0%,
+  12% {
+    border-color: var(--z-border);
+    box-shadow: none;
+    transform: translateY(0);
+  }
+  4% {
+    border-color: var(--z-alive);
+    box-shadow: 0 4px 14px rgba(45, 212, 167, 0.3);
+    transform: translateY(-2px);
+  }
+  16%,
+  100% {
+    border-color: var(--z-border);
+    box-shadow: none;
+    transform: translateY(0);
+  }
+}
+
+.zt-reveal {
+  opacity: 0;
+}
+
+.zt-reveal.zt-in-view {
+  animation: zt-bounce-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.zt-card {
+  opacity: 0;
+}
+
+.zt-reveal.zt-in-view .zt-card {
+  animation: zt-shuffle-card 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.zt-word {
+  display: inline-block;
+  opacity: 0;
+}
+
+.zt-in-view .zt-word {
+  animation: zt-wave-in 0.6s ease forwards;
+}
+
+.zt-chip {
+  animation: zt-chip-rotate 9s ease-in-out infinite;
 }

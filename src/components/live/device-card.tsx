@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils"
 import { activeChain } from "@/lib/chains"
 import { REGISTRY_ADDRESS, registryAbi, type DeviceView } from "@/lib/registry"
 import { useToast } from "@/components/ui/toast"
+import { friendlyError } from "@/lib/friendly-error"
 import { useClockTick } from "@/hooks/use-clock-tick"
 import { ProofTrail } from "@/components/live/proof-trail"
 import type { FeedEntry } from "@/hooks/use-live-feed"
@@ -45,7 +46,17 @@ function formatSeconds(s: number): string {
   return `${m}m ${rem}s`
 }
 
-export function DeviceCard({ device, feedEntries }: { device: DeviceView; feedEntries: FeedEntry[] }) {
+export function DeviceCard({
+  device,
+  feedEntries,
+  tourCardId,
+  tourSlashId,
+}: {
+  device: DeviceView
+  feedEntries: FeedEntry[]
+  tourCardId?: string
+  tourSlashId?: string
+}) {
   const { isConnected } = useAccount()
   const { writeContractAsync, isPending } = useWriteContract()
   const { toast } = useToast()
@@ -129,15 +140,20 @@ export function DeviceCard({ device, feedEntries }: { device: DeviceView; feedEn
       })
       toast(`Slash submitted: ${hash.slice(0, 10)}...`, "success")
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Slash failed"
-      toast(message, "error")
+      toast(friendlyError(err, "Slash failed. The device may no longer be breached, or your wallet rejected the transaction."), "error")
     }
   }
 
   const points = sparklinePoints(history)
 
   return (
-    <Card className="relative overflow-visible border-z-border bg-z-surface">
+    <Card
+      id={tourCardId}
+      className={cn(
+        "relative overflow-visible bg-z-surface p-[22px]",
+        status === "breached" ? "border-[#8C3A35]" : "border-z-border"
+      )}
+    >
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <span className="relative flex h-3 w-3 items-center justify-center">
@@ -178,7 +194,7 @@ export function DeviceCard({ device, feedEntries }: { device: DeviceView; feedEn
 
       <div className="mt-3 flex items-center justify-between font-mono text-xs text-z-text-dim">
         <span title="Independent counters, not a fraction: a device can receive more beats than the window strictly expects.">
-          {received} recv &middot; {expected} exp
+          {received} recv | {expected} exp
         </span>
         <span className={dead ? undefined : colorClass}>{timing}</span>
       </div>
@@ -195,10 +211,11 @@ export function DeviceCard({ device, feedEntries }: { device: DeviceView; feedEn
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2">
-        <Link href={`/address/${device.operator}`} className="text-xs text-z-accent hover:underline">
-          operator
+        <Link href={`/address/${device.operator}`} className="font-mono text-xs text-z-text-dim hover:text-z-alive">
+          Op {device.operator.slice(0, 6)}...{device.operator.slice(-4)}
         </Link>
         <Button
+          id={tourSlashId}
           variant="outline"
           size="sm"
           disabled={!isConnected || !canSlash || isPending}
