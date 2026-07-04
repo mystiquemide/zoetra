@@ -1,4 +1,4 @@
-import { activeChain, explorerAddressUrl } from "@/lib/chains"
+import Link from "next/link"
 import { REGISTRY_ADDRESS } from "@/lib/registry"
 
 export function Footer() {
@@ -15,14 +15,9 @@ export function Footer() {
           >
             GitHub
           </a>
-          <a
-            href={explorerAddressUrl(REGISTRY_ADDRESS)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-z-text"
-          >
-            Contract on {activeChain.blockExplorers.default.name}
-          </a>
+          <Link href={`/address/${REGISTRY_ADDRESS}`} className="hover:text-z-text">
+            Contract
+          </Link>
           <a
             href="https://dev-docs.botchain.ai/docs/Developers/quick-guide/"
             target="_blank"

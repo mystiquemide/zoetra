@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronDown, ChevronUp, Activity, Scissors, Plus, ExternalLink } from "lucide-react"
-import { explorerTxUrl } from "@/lib/chains"
+import Link from "next/link"
+import { ChevronDown, ChevronUp, Activity, Scissors, Plus } from "lucide-react"
 import type { FeedEntry } from "@/hooks/use-live-feed"
 import { cn } from "@/lib/utils"
 
@@ -33,14 +33,9 @@ export function ProofTrail({ deviceId, entries }: { deviceId: bigint; entries: F
                   <Icon className={cn("h-3 w-3", COLOR[e.kind])} />
                   <span>{e.detail}</span>
                 </div>
-                <a
-                  href={explorerTxUrl(e.txHash)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 font-mono text-z-accent hover:underline"
-                >
-                  {e.txHash.slice(0, 8)} <ExternalLink className="h-2.5 w-2.5" />
-                </a>
+                <Link href={`/tx/${e.txHash}`} className="font-mono text-z-accent hover:underline">
+                  {e.txHash.slice(0, 8)}
+                </Link>
               </div>
             )
           })}

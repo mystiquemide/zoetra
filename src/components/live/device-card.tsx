@@ -1,12 +1,13 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { CheckCircle2, AlertTriangle, ShieldAlert, PowerOff, Scissors, ExternalLink } from "lucide-react"
+import Link from "next/link"
+import { CheckCircle2, AlertTriangle, ShieldAlert, PowerOff, Scissors } from "lucide-react"
 import { useAccount, useWriteContract } from "wagmi"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { activeChain, explorerAddressUrl } from "@/lib/chains"
+import { activeChain } from "@/lib/chains"
 import { REGISTRY_ADDRESS, registryAbi, type DeviceView } from "@/lib/registry"
 import { useToast } from "@/components/ui/toast"
 import { useClockTick } from "@/hooks/use-clock-tick"
@@ -194,14 +195,9 @@ export function DeviceCard({ device, feedEntries }: { device: DeviceView; feedEn
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2">
-        <a
-          href={explorerAddressUrl(device.operator)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-xs text-z-accent hover:underline"
-        >
-          operator <ExternalLink className="h-3 w-3" />
-        </a>
+        <Link href={`/address/${device.operator}`} className="text-xs text-z-accent hover:underline">
+          operator
+        </Link>
         <Button
           variant="outline"
           size="sm"

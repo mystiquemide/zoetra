@@ -1,34 +1,26 @@
 "use client"
 
-import { useState } from "react"
-import { Fingerprint, Copy, Check, ExternalLink } from "lucide-react"
+import Link from "next/link"
+import { Fingerprint } from "lucide-react"
 import { Card } from "@/components/ui/card"
-import { activeChain, explorerAddressUrl } from "@/lib/chains"
+import { CopyButton } from "@/components/ui/copy-button"
+import { activeChain } from "@/lib/chains"
 import { REGISTRY_ADDRESS } from "@/lib/registry"
 import { useVerification } from "@/hooks/use-verification"
 
 export function VerificationPanel({ deviceCount }: { deviceCount: number }) {
   const { hasBytecode, bytecodeSize, bytecodeLoading, blockNumber } = useVerification()
-  const [copied, setCopied] = useState(false)
-
-  function copyAddress() {
-    navigator.clipboard.writeText(REGISTRY_ADDRESS)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1500)
-  }
 
   const rows: Array<[string, React.ReactNode]> = [
     ["Network", activeChain.name],
     [
       "Contract",
-      <button
-        key="addr"
-        onClick={copyAddress}
-        className="inline-flex items-center gap-1.5 font-mono text-z-accent hover:underline"
-      >
-        {REGISTRY_ADDRESS.slice(0, 10)}...{REGISTRY_ADDRESS.slice(-6)}
-        {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-      </button>,
+      <span key="addr" className="inline-flex items-center gap-1.5">
+        <Link href={`/address/${REGISTRY_ADDRESS}`} className="font-mono text-z-accent hover:underline">
+          {REGISTRY_ADDRESS.slice(0, 10)}...{REGISTRY_ADDRESS.slice(-6)}
+        </Link>
+        <CopyButton value={REGISTRY_ADDRESS} />
+      </span>,
     ],
     [
       "Bytecode",
@@ -43,16 +35,10 @@ export function VerificationPanel({ deviceCount }: { deviceCount: number }) {
     ["Devices registered", deviceCount.toString()],
     ["Latest block", blockNumber ? blockNumber.toLocaleString() : "--"],
     [
-      "Explorer",
-      <a
-        key="explorer"
-        href={explorerAddressUrl(REGISTRY_ADDRESS)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 text-z-accent hover:underline"
-      >
-        view on {activeChain.blockExplorers.default.name} <ExternalLink className="h-3 w-3" />
-      </a>,
+      "Details",
+      <Link key="details" href={`/address/${REGISTRY_ADDRESS}`} className="text-z-accent hover:underline">
+        view contract activity
+      </Link>,
     ],
   ]
 

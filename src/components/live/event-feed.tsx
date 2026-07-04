@@ -1,7 +1,7 @@
 "use client"
 
-import { Activity, Scissors, Plus, ExternalLink } from "lucide-react"
-import { explorerTxUrl } from "@/lib/chains"
+import Link from "next/link"
+import { Activity, Scissors, Plus } from "lucide-react"
 import type { FeedEntry } from "@/hooks/use-live-feed"
 import { cn } from "@/lib/utils"
 
@@ -37,14 +37,12 @@ export function EventFeed({ entries }: { entries: FeedEntry[] }) {
               <span className="text-z-text-dim">device #{entry.deviceId.toString()}</span>
               <span className="truncate text-z-text">{entry.detail}</span>
             </div>
-            <a
-              href={explorerTxUrl(entry.txHash)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex shrink-0 items-center gap-1 font-mono text-xs text-z-accent hover:underline"
+            <Link
+              href={`/tx/${entry.txHash}`}
+              className="shrink-0 font-mono text-xs text-z-accent hover:underline"
             >
-              {entry.txHash.slice(0, 8)} <ExternalLink className="h-3 w-3" />
-            </a>
+              {entry.txHash.slice(0, 8)}
+            </Link>
           </div>
         )
       })}
