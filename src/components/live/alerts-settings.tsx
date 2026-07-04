@@ -5,16 +5,32 @@ import { Bell, Check } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useWebhookUrl } from "@/hooks/use-webhook-url"
+import { useToast } from "@/components/ui/toast"
+
+function isValidWebhookUrl(value: string): boolean {
+  try {
+    const parsed = new URL(value)
+    return parsed.protocol === "https:" || parsed.protocol === "http:"
+  } catch {
+    return false
+  }
+}
 
 export function AlertsSettings() {
   const { url, save } = useWebhookUrl()
   const [draft, setDraft] = useState(url)
   const [saved, setSaved] = useState(false)
+  const { toast } = useToast()
 
   function handleSave(e: React.FormEvent) {
     e.preventDefault()
+    if (draft && !isValidWebhookUrl(draft)) {
+      toast("Enter a valid Discord or Slack webhook URL", "error")
+      return
+    }
     save(draft)
     setSaved(true)
+    toast(draft ? "Webhook saved" : "Webhook cleared", "success")
     setTimeout(() => setSaved(false), 1500)
   }
 

@@ -12,12 +12,7 @@ import { useToast } from "@/components/ui/toast"
 import { useClockTick } from "@/hooks/use-clock-tick"
 import { ProofTrail } from "@/components/live/proof-trail"
 import type { FeedEntry } from "@/hooks/use-live-feed"
-import {
-  computeScoreDetail,
-  secondsUntilBreach,
-  secondsUntilNextHeartbeatDue,
-  secondsSinceLastBeat,
-} from "@/lib/score-math"
+import { computeScoreDetail, secondsUntilBreach, secondsUntilNextHeartbeatDue } from "@/lib/score-math"
 
 type Status = "healthy" | "at-risk" | "breached" | "deregistered"
 
@@ -97,19 +92,20 @@ export function DeviceCard({ device, feedEntries }: { device: DeviceView; feedEn
   }
   const { received, expected } = computeScoreDetail(scoreInputs, nowSec)
   const lastBeatSec = Number(device.lastBeat)
-  const sinceLastBeat = secondsSinceLastBeat(lastBeatSec, nowSec)
-  const onSchedule = sinceLastBeat !== null && sinceLastBeat <= device.intervalSec * 1.5
 
-  // device.score (on-chain, authoritative) always wins over the client-side
-  // projection below: canSlash is checked first so the countdown can never
-  // show a "slashable" message for a device the chain says is healthy.
+  // Gate the countdown text on the authoritative on-chain status (healthy/
+  // at-risk/breached), not a latency-based "is it on schedule" heuristic:
+  // real confirmation latency routinely exceeds a fixed multiple of the
+  // heartbeat interval, so a timing-only check would flash a "Slashable in
+  // ~Xs" projection on a device the chain still reports as 100% healthy.
   let timing: string
   if (dead) {
     timing = "Deregistered"
-  } else if (canSlash) {
+  } else if (status === "breached") {
     timing = "Slashable now"
-  } else if (onSchedule) {
-    timing = `Next heartbeat due in ${formatSeconds(secondsUntilNextHeartbeatDue(device.intervalSec, lastBeatSec, nowSec))}`
+  } else if (status === "healthy") {
+    const dueIn = secondsUntilNextHeartbeatDue(device.intervalSec, lastBeatSec, nowSec)
+    timing = dueIn > 0 ? `Next heartbeat due in ${formatSeconds(dueIn)}` : "Next heartbeat any moment"
   } else {
     const breachIn = secondsUntilBreach(scoreInputs, device.slaBps, nowSec)
     timing = breachIn === null || breachIn <= 0 ? "Monitoring..." : `Slashable in ~${formatSeconds(breachIn)}`
@@ -180,7 +176,9 @@ export function DeviceCard({ device, feedEntries }: { device: DeviceView; feedEn
       </svg>
 
       <div className="mt-3 flex items-center justify-between font-mono text-xs text-z-text-dim">
-        <span>{received}/{expected} beats</span>
+        <span title="Independent counters, not a fraction: a device can receive more beats than the window strictly expects.">
+          {received} recv &middot; {expected} exp
+        </span>
         <span className={dead ? undefined : colorClass}>{timing}</span>
       </div>
 

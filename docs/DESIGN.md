@@ -37,7 +37,7 @@ StatsStrip: four tiles: Total heartbeats (live count-up), Active devices, Slashe
 
 RegisterModal: name, interval slider 5–300s, SLA slider 50–99.9%, stake input (min 0.05 BOT), single tx submit, states: disconnected → connect, wrong network → switch to 968, pending → spinner + hash, confirmed → card appears.
 
-Landing (/): eyebrow: "The first permissionless SLA layer for DePIN." hero: "Uptime you can slash." sub: open to any device from any network, no backend, only possible on BOT Chain (one sentence). Two CTAs (Live dashboard, GitHub). Three-step row (Register & stake → Heartbeat on-chain → Breach gets slashed) using Lucide `FileSignature`, `HeartPulse`, `Scissors`. Live proof strip pulling real StatsStrip numbers. Footer: GitHub repo, scan.bohr.life contract link, BOT Chain docs, @BOTChain_ai. All links real.
+Landing (/): eyebrow: "A permissionless SLA registry for DePIN." hero: "Uptime you can slash." sub: open to any device from any network, no backend, only possible on BOT Chain (one sentence). Two CTAs (Live dashboard, GitHub). Three-step row (Register & stake → Heartbeat on-chain → Breach gets slashed) using Lucide `FileSignature`, `HeartPulse`, `Scissors`. Live proof strip pulling real StatsStrip numbers. Footer: GitHub repo, scan.bohr.life contract link, BOT Chain docs, @BOTChain_ai. All links real.
 
 ## Wallet/edge states
 Read-only visitors get the full live dashboard (no wall). Wrong network: inline banner with switch button, never a blocking modal. Tx failure: toast with revert reason + explorer link. RPC down: banner "RPC unreachable, retrying", cards hold last state with `warn` styling.
@@ -52,4 +52,4 @@ Read-only visitors get the full live dashboard (no wall). Wrong network: inline 
 | 0:33 | Card: dot stops, score bleeding red | "No heartbeat, the score is decaying on-chain, in seconds" |
 | 0:50 | Score crosses SLA, Slash enables, click it | "It breached its SLA, so anyone, including you, can slash its stake. I just earned a bounty for catching it" |
 | 1:05 | Slashed event + burn tx on explorer | "Stake burned, on-chain, verifiable" |
-| 1:15 | Restart daemon, dot resumes, score climbs | "Honesty is recoverable. Fiction isn't. That's Zoetra: the first permissionless SLA layer for DePIN, uptime you can slash" |
+| 1:15 | Restart daemon, dot resumes, score climbs | "Honesty is recoverable. Fiction isn't. That's Zoetra: uptime you can slash" |

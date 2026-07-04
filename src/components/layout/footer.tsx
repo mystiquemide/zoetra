@@ -5,7 +5,7 @@ export function Footer() {
   return (
     <footer className="border-t border-z-border py-8">
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-3 px-4 text-center text-sm text-z-text-dim sm:flex-row sm:justify-between">
-        <span>Zoetra &middot; the first permissionless SLA layer for DePIN</span>
+        <span>Zoetra &middot; permissionless uptime SLAs for DePIN devices</span>
         <div className="flex items-center gap-4">
           <a
             href="https://github.com/mystiquemide/zoetra"

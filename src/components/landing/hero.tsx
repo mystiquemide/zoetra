@@ -7,17 +7,16 @@ export function Hero() {
     <section className="relative pt-16 pb-20 px-4">
       <div className="mx-auto max-w-4xl text-center">
         <p className="text-sm font-medium uppercase tracking-wide text-z-accent">
-          The first permissionless SLA layer for DePIN
+          A permissionless SLA registry for DePIN
         </p>
         <h1 className="mt-3 text-5xl font-bold tracking-tight text-z-text sm:text-6xl">
           Uptime you can slash.
         </h1>
         <p className="mt-6 text-lg text-z-text-dim max-w-2xl mx-auto">
-          Every DePIN network builds its own closed uptime system. Zoetra is open to any
-          device, from any network: no backend, no admin, uptime scored live on-chain from
-          block.timestamp alone, and anyone can slash a breached SLA and earn the bounty.
-          Only possible on BOT Chain, fast and cheap enough to make a heartbeat a real
-          transaction.
+          Most DePIN uptime systems are closed. Zoetra is open to any device, from any
+          network: no backend, no admin, uptime scored live on-chain from block.timestamp
+          alone, and anyone can slash a breached SLA and earn the bounty. Only possible on
+          BOT Chain, fast and cheap enough to make a heartbeat a real transaction.
         </p>
         <div className="mt-8 flex items-center justify-center gap-4">
           <Link href="/live">

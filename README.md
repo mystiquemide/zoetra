@@ -4,7 +4,7 @@
 
 Entry for the [BOT Chain Builder Challenge #1](https://rapid-change-2c1.notion.site/BOT-Chain-Builder-Challenge-1-38846f6c38d580c99a84d5022ba83ac5) (DePIN / Real World track).
 
-Every DePIN network builds its own closed uptime system: Helium's proof-of-coverage only works for Helium hotspots, io.net's monitoring only works for io.net nodes. Zoetra is the first open, permissionless SLA layer any device, from any network, can adopt without asking anyone's permission. There's no backend: uptime is scored live, entirely on-chain, from `block.timestamp` alone, no cron job, no indexer, no server keeping score. Operators stake native BOT against their own SLA, and if they breach it, **anyone** (not an admin) can slash the stake, permissionlessly, and earn a bounty for catching it.
+Most DePIN uptime systems are closed: Helium's proof-of-coverage only works for Helium hotspots, io.net's monitoring only works for io.net nodes. Zoetra is a permissionless, on-chain heartbeat SLA registry any device, from any network, can adopt without asking anyone's permission. There's no backend: uptime is scored live, entirely on-chain, from `block.timestamp` alone, no cron job, no indexer, no server keeping score. Operators stake native BOT against their own SLA, and if they breach it, **anyone** (not an admin) can slash the stake, permissionlessly, and earn a bounty for catching it.
 
 None of this works without BOT Chain. Sub-second finality and near-zero fees are what turn a heartbeat every few seconds into a real, affordable transaction instead of a toy; on most chains this would be unaffordable, here it's the whole product.
 
@@ -94,8 +94,8 @@ npm run dev
 ## What's real vs. what's a placeholder
 
 - Contract, deployment, all three devices, every heartbeat, and the one slash referenced in the demo video are real transactions on BOT Chain testnet, verifiable at [scan.bohr.life](https://scan.bohr.life/address/0x32550FbbB458380e2A198E97dABcc70fEe95b8E6).
-- `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` ships with a placeholder because RainbowKit hard-requires a non-empty value to boot at all, even for wallets that never touch WalletConnect. Injected wallets (MetaMask etc.) work out of the box; swap in a real WalletConnect Cloud project ID for the QR-code flow.
-- `npm audit` reports vulnerabilities in the WalletConnect/RainbowKit dependency tree (root) and Hardhat's tooling tree (contracts). All fixes require `--force` and risk breaking wallet connect or the build right before submission, so they're deliberately left unpatched rather than risking a regression under deadline. None are in code this project's contract or daemon logic touches directly.
+- No WalletConnect connector is configured on purpose. RainbowKit's default config requires a real WalletConnect Cloud project id even to boot, and without one its SDK throws a console error every load trying to fetch remote config for a fake id. Wallet support is injected-only (MetaMask, Coinbase extension, Rabby, Brave, etc.), which needs no project id and no remote fetch. Add a real WalletConnect Cloud project and swap `src/lib/web3.ts` back to `getDefaultConfig` for QR-code/mobile wallet support.
+- `npm audit` reports vulnerabilities in the RainbowKit/Hardhat dependency trees. All fixes require `--force` and risk breaking wallet connect or the build right before submission, so they're deliberately left unpatched rather than risking a regression under deadline. None are in code this project's contract or daemon logic touches directly.
 
 ## Roadmap
 

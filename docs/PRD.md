@@ -10,9 +10,11 @@ BOT Chain (chain ID 677) removes both blockers: 0.75s blocks, ~0.9s finality, ne
 
 ## Overview
 
-Zoetra is the first permissionless, chain-native SLA layer for DePIN. Every existing DePIN network builds its own closed uptime system, tied to its own hardware; Zoetra is open to any device, from any network, that chooses to run its heartbeat client. Devices prove liveness by sending heartbeat transactions to a registry contract at their declared interval. The contract scores uptime over a rolling window, computed live from `block.timestamp` with no backend, no cron job, no indexer. Operators stake BOT against an SLA threshold; when a device's score breaches the threshold, anyone (not an admin) can call slash() and earn a bounty for catching it. Uptime stops being a marketing claim and becomes slashable, verifiable state. None of this is affordable without BOT Chain: sub-second finality and near-zero fees are what make a heartbeat every few seconds a real transaction instead of a toy.
+Zoetra is a permissionless, on-chain heartbeat SLA registry for DePIN devices. Most existing DePIN networks build their own closed uptime system, tied to their own hardware; Zoetra is open to any device, from any network, that chooses to run its heartbeat client. Devices prove liveness by sending heartbeat transactions to a registry contract at their declared interval. The contract scores uptime over a rolling window, computed live from `block.timestamp` with no backend, no cron job, no indexer. Operators stake BOT against an SLA threshold; when a device's score breaches the threshold, anyone (not an admin) can call slash() and earn a bounty for catching it. Uptime stops being a marketing claim and becomes slashable, verifiable state. None of this is affordable without BOT Chain: sub-second finality and near-zero fees are what make a heartbeat every few seconds a real transaction instead of a toy.
 
-One line: the first permissionless, chain-native SLA layer for DePIN, uptime you can slash.
+One line: uptime you can slash.
+
+Note on positioning: research (Jul 3-4) found adjacent claims in this space, notably Parasail's "first trust layer for DePIN" service-guarantee positioning, so Zoetra does not claim to be "the first permissionless SLA layer for DePIN" as an unqualified absolute. The defensible claim: to our research, no direct public equivalent exists to this exact model, device heartbeat transactions, on-chain SLA scores decaying live from block.timestamp, stake-backed uptime, and permissionless slashing, on an EVM chain. If a narrower "first" claim is wanted, scope it to "the first BOT Chain-native heartbeat SLA registry for DePIN devices."
 
 ## User Roles
 
