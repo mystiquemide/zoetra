@@ -21,8 +21,8 @@ export function Nav() {
     cn("text-sm", pathname === href ? "font-semibold text-z-text" : "font-medium text-z-alive")
 
   return (
-    <nav className="fixed top-0 z-40 w-full border-b border-z-border bg-z-bg/80 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
+    <header className="fixed top-0 z-40 w-full border-b border-z-border bg-z-bg/80 backdrop-blur">
+      <nav className="mx-auto flex h-16 max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4">
         <Link href="/" className="flex items-center gap-2.5 text-lg font-semibold tracking-tight">
           <Image src="/design/zoetra-logo.png" alt="Zoetra" width={28} height={28} className="h-7 w-7 object-contain" />
           <span className="text-z-text"><span className="text-z-alive">Zoe</span>tra</span>
@@ -33,7 +33,7 @@ export function Nav() {
             <ArrowLeft className="h-[15px] w-[15px]" /> Back home
           </Link>
         ) : (
-          <div className="flex items-center gap-8">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2 sm:gap-x-8">
             <Link href="/live" className={navLinkClass("/live")}>
               Live dashboard
             </Link>
@@ -53,7 +53,7 @@ export function Nav() {
             )}
           </div>
         )}
-      </div>
-    </nav>
+      </nav>
+    </header>
   )
 }

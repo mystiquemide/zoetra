@@ -70,6 +70,13 @@ export default function DocsPage() {
               your declared interval, using your device&apos;s operator key.
             </li>
           </ol>
+          <pre className="mt-4 overflow-x-auto rounded-[10px] border border-z-border bg-z-surface-2 px-5 py-4 font-mono text-[13px] leading-relaxed text-z-text-soft">
+{`cd daemon
+npm install
+cp .env.example .env
+# fill RPC_URL, REGISTRY_ADDRESS, PRIVATE_KEY, DEVICE_ID, INTERVAL_MS
+npm start`}
+          </pre>
         </section>
 
         <section>

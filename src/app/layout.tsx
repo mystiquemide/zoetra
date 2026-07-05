@@ -15,13 +15,13 @@ const description =
   "A permissionless, on-chain heartbeat SLA registry for DePIN devices. Open to any device from any network, only possible on BOT Chain."
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://zoetra.vercel.app"),
+  metadataBase: new URL("https://zoetra.xyz"),
   title,
   description,
   openGraph: {
     title,
     description,
-    url: "https://zoetra.vercel.app",
+    url: "https://zoetra.xyz",
     siteName: "Zoetra",
     images: [{ url: "/design/zoetra-logo.png", width: 512, height: 512, alt: "Zoetra" }],
     type: "website",
