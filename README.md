@@ -18,7 +18,7 @@ None of this works without BOT Chain. Sub-second finality and near-zero fees are
 
 ## What to watch for
 
-1. Three device wallets heartbeat every 5 seconds, each one a real transaction.
+1. Three device wallets heartbeat every 60 seconds, each one a real transaction.
 2. Every card's score is computed live on-chain from `block.timestamp`, not cached or polled from a database.
 3. Stop a device's daemon (`Ctrl+C` on `daemon/heartbeat.mjs`) and its score decays visibly within seconds.
 4. Once a device's score falls below its own SLA, the Slash button activates for anyone with a connected wallet, and pays a bounty for catching the breach.
