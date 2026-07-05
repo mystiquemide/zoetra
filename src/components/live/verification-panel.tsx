@@ -49,16 +49,18 @@ export function VerificationPanel({ deviceCount }: { deviceCount: number }) {
   ]
 
   return (
-    <Card id="tour-verify-panel" className="border-z-border bg-z-surface p-5">
-      <div className="mb-3.5 text-sm font-semibold text-z-text">Do not trust this dashboard</div>
-      <div className="flex flex-col gap-2.5 text-[13px]">
-        {rows.map(([label, value]) => (
-          <div key={label} className="flex items-center justify-between gap-4">
-            <span className="text-z-text-dim">{label}</span>
-            <span className="text-z-text">{value}</span>
-          </div>
-        ))}
-      </div>
-    </Card>
+    <aside aria-label="On-chain verification">
+      <Card id="tour-verify-panel" className="border-z-border bg-z-surface p-5">
+        <div className="mb-3.5 text-sm font-semibold text-z-text">Do not trust this dashboard</div>
+        <div className="flex flex-col gap-2.5 text-[13px]">
+          {rows.map(([label, value]) => (
+            <div key={label} className="flex items-center justify-between gap-4">
+              <span className="text-z-text-dim">{label}</span>
+              <span className="text-z-text">{value}</span>
+            </div>
+          ))}
+        </div>
+      </Card>
+    </aside>
   )
 }

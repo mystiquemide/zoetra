@@ -51,6 +51,7 @@ export function AlertsSettings() {
         </label>
         <input
           id="webhook-url"
+          name="webhookUrl"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="https://discord.com/api/webhooks/..."
