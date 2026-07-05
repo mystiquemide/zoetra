@@ -17,6 +17,7 @@ export function ProofTrail({ deviceId, entries }: { deviceId: bigint; entries: F
     <div className="mt-3 border-t border-z-border pt-3">
       <button
         onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
         className="flex w-full items-center justify-between text-xs text-z-text-dim hover:text-z-text"
       >
         <span>Proof trail ({mine.length})</span>

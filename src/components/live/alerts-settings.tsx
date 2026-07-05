@@ -46,7 +46,11 @@ export function AlertsSettings() {
         stored only in your browser, never on a server.
       </p>
       <form onSubmit={handleSave} className="flex gap-2">
+        <label htmlFor="webhook-url" className="sr-only">
+          Breach alert webhook URL
+        </label>
         <input
+          id="webhook-url"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="https://discord.com/api/webhooks/..."

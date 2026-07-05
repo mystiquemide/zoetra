@@ -98,6 +98,9 @@ export function OnboardingTour({
       />
 
       <div
+        role="dialog"
+        aria-label={`Tour step ${step + 1} of ${steps.length}: ${current.title}`}
+        aria-live="polite"
         className="fixed z-[202] w-80 rounded-2xl bg-z-surface p-[22px] shadow-[0_20px_48px_rgba(0,0,0,0.45)] pointer-events-auto transition-all duration-300 ease-out"
         style={{ top: card.top, left: card.left }}
       >
@@ -105,7 +108,7 @@ export function OnboardingTour({
           <span className="font-mono text-[11px] font-semibold text-z-alive">
             {current.label} &middot; {step + 1} / {steps.length}
           </span>
-          <button onClick={onEnd} className="flex text-z-text-dim hover:text-z-text">
+          <button onClick={onEnd} aria-label="End tour" className="flex text-z-text-dim hover:text-z-text">
             <X className="h-4 w-4" />
           </button>
         </div>

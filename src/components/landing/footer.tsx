@@ -1,7 +1,8 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Code2, X, Mail } from "lucide-react"
+import { Code2, X } from "lucide-react"
 import { REGISTRY_ADDRESS } from "@/lib/registry"
+import { explorerAddressUrl } from "@/lib/chains"
 
 export function LandingFooter() {
   return (
@@ -20,9 +21,14 @@ export function LandingFooter() {
           >
             <Code2 className="h-4 w-4" /> GitHub
           </a>
-          <Link href={`/address/${REGISTRY_ADDRESS}`} className="text-[13px] text-z-alive">
+          <a
+            href={explorerAddressUrl(REGISTRY_ADDRESS)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[13px] text-z-alive"
+          >
             Contract on BOTScan
-          </Link>
+          </a>
           <a
             href="https://dev-docs.botchain.ai/docs/Developers/quick-guide/"
             target="_blank"
@@ -46,9 +52,6 @@ export function LandingFooter() {
         <div className="flex flex-wrap items-center gap-6">
           <a href="https://x.com/Zoetra_app" target="_blank" rel="noopener noreferrer" aria-label="X" className="flex items-center text-z-alive">
             <X className="h-[15px] w-[15px]" />
-          </a>
-          <a href="mailto:" aria-label="Email" className="flex items-center text-z-alive">
-            <Mail className="h-[15px] w-[15px]" />
           </a>
           <Link href="/docs" className="text-xs text-z-alive">Docs</Link>
           <Link href="/terms" className="text-xs text-z-alive">Terms</Link>

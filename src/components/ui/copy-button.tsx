@@ -18,6 +18,7 @@ export function CopyButton({ value, className }: { value: string; className?: st
       onClick={handleCopy}
       className={cn("inline-flex items-center text-z-text-dim hover:text-z-text", className)}
       title="Copy to clipboard"
+      aria-label={copied ? "Copied to clipboard" : "Copy to clipboard"}
     >
       {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
     </button>
