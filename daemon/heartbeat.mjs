@@ -35,11 +35,59 @@ const account = privateKeyToAccount(PRIVATE_KEY);
 const publicClient = createPublicClient({ chain, transport: http(RPC_URL) });
 const walletClient = createWalletClient({ account, chain, transport: http(RPC_URL) });
 
+const ALERT_WEBHOOK_URL = process.env.ALERT_WEBHOOK_URL || "";
+const WARN_BEATS_REMAINING = 50n;
+const CRITICAL_BEATS_REMAINING = 10n;
+
 let stopped = false;
 let tickCount = 0;
+let lastTxCostWei = null;
+let balanceAlertLevel = null; // null | "warn" | "critical"
 
 function log(...args) {
   console.log(`[zoetra:${DEVICE_ID}]`, ...args);
+}
+
+async function notify(text) {
+  log(text);
+  if (!ALERT_WEBHOOK_URL) return;
+  try {
+    await fetch(ALERT_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ text: `Zoetra device ${DEVICE_ID} (${account.address}): ${text}` }),
+      signal: AbortSignal.timeout(8000),
+    });
+  } catch (err) {
+    log(`webhook delivery failed: ${err.message}`);
+  }
+}
+
+async function checkBalance() {
+  let costEstimate = lastTxCostWei;
+  if (costEstimate === null) {
+    const gasPrice = await publicClient.getGasPrice();
+    costEstimate = gasPrice * 30000n; // conservative pre-first-success estimate
+  }
+  if (costEstimate === 0n) return;
+
+  const balance = await publicClient.getBalance({ address: account.address });
+  const beatsRemaining = balance / costEstimate;
+
+  let level = null;
+  if (beatsRemaining < CRITICAL_BEATS_REMAINING) level = "critical";
+  else if (beatsRemaining < WARN_BEATS_REMAINING) level = "warn";
+
+  if (level === balanceAlertLevel) return;
+  balanceAlertLevel = level;
+
+  if (level === "critical") {
+    await notify(`CRITICAL low balance, ~${beatsRemaining} heartbeats of gas left. Top up now or it will start missing SLA.`);
+  } else if (level === "warn") {
+    await notify(`LOW BALANCE WARNING, ~${beatsRemaining} heartbeats of gas left. Plan a top-up soon.`);
+  } else {
+    log(`balance recovered, ~${beatsRemaining} heartbeats of gas available`);
+  }
 }
 
 async function beatOnce() {
@@ -52,10 +100,17 @@ async function beatOnce() {
       args: [BigInt(DEVICE_ID)],
     });
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
+    lastTxCostWei = receipt.gasUsed * receipt.effectiveGasPrice;
     const latencyMs = Date.now() - startedAt;
     log(`beat #${tickCount} tx=${hash} block=${receipt.blockNumber} latency=${latencyMs}ms`);
   } catch (err) {
     log(`beat #${tickCount} FAILED: ${err.shortMessage || err.message}`);
+  }
+
+  try {
+    await checkBalance();
+  } catch (err) {
+    log(`balance check failed: ${err.message}`);
   }
 }
 
