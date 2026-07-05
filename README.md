@@ -2,7 +2,7 @@
 
 **Uptime you can slash.**
 
-A permissionless, on-chain heartbeat SLA registry for DePIN devices, deployed on BOT Chain. Most DePIN uptime systems are closed — Helium's proof-of-coverage only works for Helium hotspots, io.net's monitoring only works for io.net nodes. Zoetra is open to any device, from any network. There's no backend: uptime is scored live, entirely on-chain, from `block.timestamp` alone, no cron job, no indexer, no server keeping score. Operators stake native BOT against their own declared SLA, and if they breach it, **anyone** — not an admin, not Zoetra — can slash the stake and earn a bounty for catching it.
+A permissionless, on-chain heartbeat SLA registry for DePIN devices, deployed on BOT Chain. Most DePIN uptime systems are closed  -  Helium's proof-of-coverage only works for Helium hotspots, io.net's monitoring only works for io.net nodes. Zoetra is open to any device, from any network. There's no backend: uptime is scored live, entirely on-chain, from `block.timestamp` alone, no cron job, no indexer, no server keeping score. Operators stake native BOT against their own declared SLA, and if they breach it, **anyone**  -  not an admin, not Zoetra  -  can slash the stake and earn a bounty for catching it.
 
 None of this works without BOT Chain. Sub-second finality and near-zero fees are what turn a heartbeat every few seconds into a real, affordable transaction instead of a toy.
 
@@ -16,6 +16,12 @@ None of this works without BOT Chain. Sub-second finality and near-zero fees are
 - **Live dashboard:** https://zoetra.xyz/live
 - **Contract (BOT Chain testnet, chain 968):** [`0x32550FbbB458380e2A198E97dABcc70fEe95b8E6`](https://scan.bohr.life/address/0x32550FbbB458380e2A198E97dABcc70fEe95b8E6)
 
+## Product screens
+
+![Zoetra landing page](docs/assets/hero.png)
+
+![Live dashboard](docs/assets/dashboard.png)
+
 ## What to watch for
 
 1. Three device wallets heartbeat every 60 seconds, each one a real transaction.
@@ -25,9 +31,9 @@ None of this works without BOT Chain. Sub-second finality and near-zero fees are
 
 ## How it works
 
-1. **Register and stake** — declare a heartbeat interval (5–300s) and an SLA threshold (50–99.99%), stake ≥0.05 BOT.
-2. **Heartbeat on-chain** — every beat is a real transaction. `scoreOf(id)` computes uptime live from a two-bucket rolling window and `block.timestamp`, so the score decays in real time even between transactions, no cron job required.
-3. **Breach gets slashed** — once `scoreOf(id) < slaBps`, anyone can call `slash(id)`. 20% of the remaining stake is slashed, 10% of that goes to the caller as a bounty, the rest is burned.
+1. **Register and stake**  -  declare a heartbeat interval (5–300s) and an SLA threshold (50–99.99%), stake ≥0.05 BOT.
+2. **Heartbeat on-chain**  -  every beat is a real transaction. `scoreOf(id)` computes uptime live from a two-bucket rolling window and `block.timestamp`, so the score decays in real time even between transactions, no cron job required.
+3. **Breach gets slashed**  -  once `scoreOf(id) < slaBps`, anyone can call `slash(id)`. 20% of the remaining stake is slashed, 10% of that goes to the caller as a bounty, the rest is burned.
 
 ## Architecture
 
@@ -71,7 +77,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full design and trust
 
 ## Features
 
-- Permissionless registration — any wallet, any device, no allowlist
+- Permissionless registration  -  any wallet, any device, no allowlist
 - Live on-chain uptime scoring from `block.timestamp`, no indexer or cron
 - Permissionless slashing with a caller bounty
 - In-app block explorer (`/tx/[hash]`, `/address/[addr]`) so every claim is verifiable without leaving the app
@@ -90,7 +96,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full design and trust
 
 ```
 contracts/   Hardhat workspace: ZoetraRegistry.sol, tests, deploy/setup scripts
-daemon/      heartbeat.mjs — one process per device, viem wallet client
+daemon/      heartbeat.mjs  -  one process per device, viem wallet client
 src/         Next.js App Router dashboard (wagmi + RainbowKit + viem)
 docs/        Architecture, product spec, design system, analytics, task breakdown
 ```
@@ -120,7 +126,7 @@ cp .env.example .env
 npm start
 ```
 
-Run one process per device. Each is a real funded wallet sending real transactions — killing the process is the actual "device went offline" event, there's no simulated-failure switch anywhere in this codebase.
+Run one process per device. Each is a real funded wallet sending real transactions  -  killing the process is the actual "device went offline" event, there's no simulated-failure switch anywhere in this codebase.
 
 ### Dashboard
 
@@ -183,7 +189,7 @@ Wallet support covers injected extensions (MetaMask, Coinbase Wallet, Rabby, Bra
 - SLA insurance: let underwriters pool capital that pays out if a device gets slashed, in exchange for a premium
 - A public cross-device leaderboard/explorer, once there's a real fleet to rank
 
-**The honest hard problem:** a heartbeat today only proves a *wallet* is active, not that the *physical device* sent it — anyone holding the key could run the daemon from anywhere. The real fix is hardware-rooted attestation (a signature from a TPM or secure element on the device itself), which is a hardware engineering project, not a smart contract change.
+**The honest hard problem:** a heartbeat today only proves a *wallet* is active, not that the *physical device* sent it  -  anyone holding the key could run the daemon from anywhere. The real fix is hardware-rooted attestation (a signature from a TPM or secure element on the device itself), which is a hardware engineering project, not a smart contract change.
 
 **The bigger one:** oracle bridges into existing closed DePIN networks (Helium, io.net) that pull their existing attestations into this registry too, so adoption doesn't require every device to abandon its current network.
 

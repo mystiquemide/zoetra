@@ -1,4 +1,4 @@
-# Zoetra — Design Spec
+# Zoetra  -  Design Spec
 
 Reflects the app as actually built and deployed (updated Jul 4 2026). Every screen below exists in the live app at the routes listed; nothing here is aspirational.
 

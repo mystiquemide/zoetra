@@ -1,4 +1,4 @@
-# Zoetra — Analytics Spec
+# Zoetra  -  Analytics Spec
 
 No third-party analytics, no tracking, no PII. Every metric derives from chain events, which makes the analytics layer itself independently verifiable. The dashboard is the analytics product.
 

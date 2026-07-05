@@ -1,4 +1,4 @@
-# Zoetra — Product Requirements Document
+# Zoetra  -  Product Requirements Document
 
 Entry for BOT Chain Builder Challenge #1 · DePIN / Real World track · Submit by Jul 8 2026, 23:59 UTC+8
 
@@ -18,18 +18,18 @@ Note on positioning: research (Jul 3-4) found adjacent claims in this space, not
 
 ## User Roles
 
-1. Device operator — registers a device, runs the heartbeat daemon, stakes BOT on an SLA target, withdraws stake on clean exit.
-2. Verifier (anyone) — watches scores, verifies beats on Blockscout, calls slash() on breached devices, earns a slash bounty.
-3. Observer — reads the live dashboard, cross-checks any beat or slash against the explorer without trusting Zoetra's UI.
+1. Device operator  -  registers a device, runs the heartbeat daemon, stakes BOT on an SLA target, withdraws stake on clean exit.
+2. Verifier (anyone)  -  watches scores, verifies beats on Blockscout, calls slash() on breached devices, earns a slash bounty.
+3. Observer  -  reads the live dashboard, cross-checks any beat or slash against the explorer without trusting Zoetra's UI.
 
 ## Core Features
 
 F1. ZoetraRegistry contract (Solidity, BOT Chain)
-- register(name, interval, slaThresholdBps) payable — stake attached, interval bounded (5s–300s)
-- heartbeat(deviceId) — only device wallet, records beat, updates rolling window
-- scoreOf(deviceId) view — uptime in basis points over last WINDOW expected beats
-- slash(deviceId) — permissionless; valid only when score < threshold; burns slashPortion of stake, pays caller a bounty, emits Slashed
-- deregister + withdrawStake — operator exit with cooldown
+- register(name, interval, slaThresholdBps) payable  -  stake attached, interval bounded (5s–300s)
+- heartbeat(deviceId)  -  only device wallet, records beat, updates rolling window
+- scoreOf(deviceId) view  -  uptime in basis points over last WINDOW expected beats
+- slash(deviceId)  -  permissionless; valid only when score < threshold; burns slashPortion of stake, pays caller a bounty, emits Slashed
+- deregister + withdrawStake  -  operator exit with cooldown
 - Events for every state change: Registered, Beat, Slashed, Deregistered
 
 F2. Heartbeat daemon (Node + viem)

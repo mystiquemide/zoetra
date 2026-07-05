@@ -1,4 +1,4 @@
-# AGENTS.md — Zoetra
+# AGENTS.md  -  Zoetra
 
 Rules for any AI agent or human working in this repo. Read docs/ARCHITECTURE.md before writing code; it is the contract.
 

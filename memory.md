@@ -7,14 +7,14 @@
 - Key goals right now: post-launch audit fixes (lint, CI, license, judge-facing polish) → demo video → submission
 
 ## PROJECT STRUCTURE
-- src/app/ — Next.js App Router: landing (`/`), live dashboard (`/live`)
-- src/components/ — ui/ (button, card, modal, toast, skeleton), web3/ (connect, provider), landing/, live/ (device-card, event-feed, stats-strip, register-modal)
-- src/hooks/ — use-devices.ts (getDevices poll), use-live-feed.ts (Beat/Slashed/Registered event watch)
-- src/lib/ — chains.ts (BOT Chain testnet/mainnet), registry.ts (ABI + address), web3.ts (wagmi config), utils.ts
-- contracts/ — Hardhat workspace: ZoetraRegistry.sol, 23 tests, deploy/setup/topup/slash scripts, deployments/ (public addresses + tx hashes, no keys)
-- daemon/ — heartbeat.mjs, one process per device (Node + viem)
-- docs/ — PRD.md, ARCHITECTURE.md, DESIGN.md, ANALYTICS.md, TASKS.md (all done)
-- .secrets/ — gitignored, root-anchored; holds all wallet private keys, never committed
+- src/app/  -  Next.js App Router: landing (`/`), live dashboard (`/live`)
+- src/components/  -  ui/ (button, card, modal, toast, skeleton), web3/ (connect, provider), landing/, live/ (device-card, event-feed, stats-strip, register-modal)
+- src/hooks/  -  use-devices.ts (getDevices poll), use-live-feed.ts (Beat/Slashed/Registered event watch)
+- src/lib/  -  chains.ts (BOT Chain testnet/mainnet), registry.ts (ABI + address), web3.ts (wagmi config), utils.ts
+- contracts/  -  Hardhat workspace: ZoetraRegistry.sol, 23 tests, deploy/setup/topup/slash scripts, deployments/ (public addresses + tx hashes, no keys)
+- daemon/  -  heartbeat.mjs, one process per device (Node + viem)
+- docs/  -  PRD.md, ARCHITECTURE.md, DESIGN.md, ANALYTICS.md, TASKS.md (all done)
+- .secrets/  -  gitignored, root-anchored; holds all wallet private keys, never committed
 
 ## CORE MODULES & WHAT THEY DO
 | File/Module | Purpose | Last Modified |
@@ -79,10 +79,10 @@
 - Rolling-window score, not lifetime average (visible decay in seconds, visible recovery)
 - Permissionless slash with caller bounty (turns judges into participants during demo)
 - Testnet (968) primary over mainnet (677): free faucet gas, rules explicitly accept testnet
-- Root ESLint ignores contracts/** and daemon/** — separate workspaces with their own CommonJS/Node conventions, not meant to be judged by Next.js's TypeScript lint rules
+- Root ESLint ignores contracts/** and daemon/**  -  separate workspaces with their own CommonJS/Node conventions, not meant to be judged by Next.js's TypeScript lint rules
 
 ## SESSION LOG
-### Session 1 — Jul 3 2026
+### Session 1  -  Jul 3 2026
 - Parsed challenge (tweet → forms → Notion rulebook), live-verified chain RPC/explorer/faucet
 - Generated 5 fresh ideas, user picked heartbeat SLA registry; name Zoetra validated
 - Cloned boilerplate-web3 → zoetra, wrote PRD/architecture/design docs (approved)

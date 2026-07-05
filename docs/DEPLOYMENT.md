@@ -1,6 +1,6 @@
 # Deployment
 
-Zoetra's dashboard is a standard Next.js app with no database — deployment only needs the environment variables below, nothing else to provision.
+Zoetra's dashboard is a standard Next.js app with no database  -  deployment only needs the environment variables below, nothing else to provision.
 
 ## Prerequisites
 
@@ -16,7 +16,7 @@ Zoetra's dashboard is a standard Next.js app with no database — deployment onl
 | `NEXT_PUBLIC_REGISTRY_ADDRESS` | no | Overrides the built-in registry address |
 | `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` | no | Reown/WalletConnect Cloud project id |
 
-None of these are secret — the contract address and chain selector are public by nature, and the WalletConnect project id is a public client identifier, not a credential.
+None of these are secret  -  the contract address and chain selector are public by nature, and the WalletConnect project id is a public client identifier, not a credential.
 
 ## Local production build
 
@@ -31,7 +31,7 @@ Verify the build serves correctly at `http://localhost:3010` before deploying.
 
 ## Vercel deployment
 
-1. Import the repository at [vercel.com/new](https://vercel.com/new) — Next.js is auto-detected, no custom build config needed.
+1. Import the repository at [vercel.com/new](https://vercel.com/new)  -  Next.js is auto-detected, no custom build config needed.
 2. Add the environment variables above under Project Settings → Environment Variables.
 3. Deploy. Vercel builds and serves the app with zero additional configuration.
 

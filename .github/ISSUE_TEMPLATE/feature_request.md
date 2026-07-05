@@ -21,4 +21,4 @@ Any other approaches you thought about.
 - [ ] Daemon (`daemon/`)
 - [ ] Docs
 
-Check the [roadmap in the README](../../README.md#roadmap) first — it may already be planned.
+Check the [roadmap in the README](../../README.md#roadmap) first  -  it may already be planned.

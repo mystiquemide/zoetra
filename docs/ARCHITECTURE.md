@@ -1,4 +1,4 @@
-# Zoetra — Architecture
+# Zoetra  -  Architecture
 
 ## System Overview
 

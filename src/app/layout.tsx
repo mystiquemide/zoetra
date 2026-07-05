@@ -10,7 +10,7 @@ import { Web3Provider } from "@/components/web3/web3-provider"
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] })
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] })
 
-const title = "Zoetra — Uptime you can slash"
+const title = "Zoetra  -  Uptime you can slash"
 const description =
   "A permissionless, on-chain heartbeat SLA registry for DePIN devices. Open to any device from any network, only possible on BOT Chain."
 
