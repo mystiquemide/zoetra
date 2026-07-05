@@ -8,22 +8,24 @@ export function Hero() {
       className="relative bg-cover bg-[position:center_30%] rounded-b-3xl overflow-hidden"
       style={{ backgroundImage: "url('/design/hero-network.jpg')" }}
     >
-      <nav className="relative z-10 flex items-center justify-between px-6 py-4 sm:px-12">
-        <Link href="/" className="flex items-center gap-2.5">
-          <Image src="/design/zoetra-logo.png" alt="Zoetra" width={28} height={28} className="h-7 w-7 object-contain" />
-          <span className="text-[17px] font-semibold tracking-tighter text-z-text">
-            <span className="text-z-alive">Zoe</span>tra
-          </span>
-        </Link>
-        <div className="flex items-center gap-8">
-          <Link href="/live" className="text-sm font-medium text-z-alive">
-            Live dashboard
+      <header className="relative z-10">
+        <nav className="flex items-center justify-between px-6 py-4 sm:px-12">
+          <Link href="/" className="flex items-center gap-2.5">
+            <Image src="/design/zoetra-logo.png" alt="Zoetra" width={28} height={28} className="h-7 w-7 object-contain" />
+            <span className="text-[17px] font-semibold tracking-tighter text-z-text">
+              <span className="text-z-alive">Zoe</span>tra
+            </span>
           </Link>
-          <Link href="/demo" className="text-sm font-medium text-z-alive">
-            Demo
-          </Link>
-        </div>
-      </nav>
+          <div className="flex items-center gap-8">
+            <Link href="/live" className="flex items-center py-2.5 text-sm font-medium text-z-alive">
+              Live dashboard
+            </Link>
+            <Link href="/demo" className="flex items-center py-2.5 text-sm font-medium text-z-alive">
+              Demo
+            </Link>
+          </div>
+        </nav>
+      </header>
 
       <section className="mx-auto flex max-w-6xl flex-col items-center px-6 pb-20 pt-6 text-center sm:px-12">
         <h1 className="mb-7 text-[15vw] font-semibold leading-[0.94] tracking-tighter text-z-text drop-shadow-[0_2px_32px_rgba(0,0,0,0.6)] sm:text-7xl md:text-8xl">

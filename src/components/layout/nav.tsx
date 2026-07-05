@@ -18,7 +18,10 @@ export function Nav() {
   const isDetailPage = pathname.startsWith("/address/") || pathname.startsWith("/tx/")
 
   const navLinkClass = (href: string) =>
-    cn("text-sm", pathname === href ? "font-semibold text-z-text" : "font-medium text-z-alive")
+    cn(
+      "flex items-center py-2.5 text-sm",
+      pathname === href ? "font-semibold text-z-text" : "font-medium text-z-alive"
+    )
 
   // No mobile hamburger by design: this nav never carries more than 3-4
   // items (logo, Live dashboard, Demo, optionally GitHub), which wraps
@@ -33,7 +36,7 @@ export function Nav() {
         </Link>
 
         {isSimple ? (
-          <Link href="/" className="flex items-center gap-1.5 text-sm font-medium text-z-alive">
+          <Link href="/" className="flex items-center gap-1.5 py-2.5 text-sm font-medium text-z-alive">
             <ArrowLeft className="h-[15px] w-[15px]" /> Back home
           </Link>
         ) : (
@@ -49,7 +52,7 @@ export function Nav() {
                 href="https://github.com/mystiquemide/zoetra"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm font-medium text-z-alive"
+                className="flex items-center gap-1.5 py-2.5 text-sm font-medium text-z-alive"
               >
                 <Code2 className="h-[15px] w-[15px]" />
                 GitHub
