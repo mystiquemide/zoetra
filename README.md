@@ -13,7 +13,7 @@ None of this works without BOT Chain. Sub-second finality and near-zero fees are
 [![Solidity 0.8.28](https://img.shields.io/badge/Solidity-0.8.28-363636)](./contracts)
 [![BOT Chain](https://img.shields.io/badge/chain-BOT%20Chain-2DD4A7)](https://dev-docs.botchain.ai/docs/Developers/quick-guide/)
 
-- **Live dashboard:** https://zoetra.vercel.app/live
+- **Live dashboard:** https://zoetra.xyz/live
 - **Contract (BOT Chain testnet, chain 968):** [`0x32550FbbB458380e2A198E97dABcc70fEe95b8E6`](https://scan.bohr.life/address/0x32550FbbB458380e2A198E97dABcc70fEe95b8E6)
 
 ## What to watch for
