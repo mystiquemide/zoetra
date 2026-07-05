@@ -15,9 +15,9 @@ export function StatsStrip({ activeDevices, totalDevices, beats, slashes }: Stat
   const { data: blockNumber } = useBlockNumber({ chainId: activeChain.id, watch: true })
 
   const tiles = [
-    { label: "Heartbeats", value: beats.toLocaleString() },
+    { label: "Heartbeats (session)", value: beats.toLocaleString() },
     { label: "Active", value: `${activeDevices} / ${totalDevices}` },
-    { label: "Slashes", value: slashes.toLocaleString(), color: slashes > 0 ? "text-z-bleed" : undefined },
+    { label: "Slashes (session)", value: slashes.toLocaleString(), color: slashes > 0 ? "text-z-bleed" : undefined },
     { label: "Block", value: blockNumber ? blockNumber.toLocaleString() : "--" },
   ]
 
