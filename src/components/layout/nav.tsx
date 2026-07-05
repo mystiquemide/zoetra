@@ -20,6 +20,10 @@ export function Nav() {
   const navLinkClass = (href: string) =>
     cn("text-sm", pathname === href ? "font-semibold text-z-text" : "font-medium text-z-alive")
 
+  // No mobile hamburger by design: this nav never carries more than 3-4
+  // items (logo, Live dashboard, Demo, optionally GitHub), which wraps
+  // cleanly at any width via flex-wrap rather than needing a collapsed
+  // menu. Revisit this if a 5th item is ever added.
   return (
     <header className="fixed top-0 z-40 w-full border-b border-z-border bg-z-bg/80 backdrop-blur">
       <nav className="mx-auto flex h-16 max-w-6xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4">
