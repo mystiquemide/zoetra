@@ -16,6 +16,7 @@ import { RegisterModal } from "@/components/live/register-modal"
 import { VerificationPanel } from "@/components/live/verification-panel"
 import { AlertsSettings } from "@/components/live/alerts-settings"
 import { OnboardingTour, type TourStep } from "@/components/live/onboarding-tour"
+import { FaucetBar, FAUCET_URL } from "@/components/live/faucet-bar"
 import { useWebhookUrl } from "@/hooks/use-webhook-url"
 import { useBreachAlerts } from "@/hooks/use-breach-alerts"
 import { activeChain } from "@/lib/chains"
@@ -55,7 +56,8 @@ const TOUR_STEPS: TourStep[] = [
     target: "#tour-register-btn",
     label: "Register",
     title: "Register your own device",
-    body: "Set a name, heartbeat interval, SLA threshold, and stake, then put a heartbeat promise on-chain. Your stake is at risk automatically from that point on.",
+    body: "Set a name, heartbeat interval, SLA threshold, and stake, then put a heartbeat promise on-chain. Your stake is at risk automatically from that point on. You'll need testnet BOT in your wallet first,",
+    link: { href: FAUCET_URL, label: "get some free from the faucet" },
   },
 ]
 
@@ -99,7 +101,8 @@ export default function LivePage() {
     setTourStep((s) => s + 1)
   }
 
-  const activeDevices = devices.filter((d) => d.deregisteredAt === 0n).length
+  const liveDevices = devices.filter((d) => d.deregisteredAt === 0n)
+  const activeDevices = liveDevices.length
   const wrongNetwork = isConnected && chain?.id !== activeChain.id
 
   return (
@@ -145,6 +148,8 @@ export default function LivePage() {
         </div>
       )}
 
+      <FaucetBar />
+
       <div className="mb-6 grid grid-cols-1 items-start gap-5 lg:grid-cols-[1fr_340px]">
         <StatsStrip
           activeDevices={activeDevices}
@@ -164,13 +169,13 @@ export default function LivePage() {
             RPC unreachable, retrying...
           </div>
         )}
-        {!isError && !isLoading && devices.length === 0 && (
+        {!isError && !isLoading && liveDevices.length === 0 && (
           <Card className="border-z-border bg-z-surface py-12 text-center text-z-text-dim">
             No devices registered yet. Be the first.
           </Card>
         )}
         <div className="grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(340px,1fr))]">
-          {devices.map((device, i) => (
+          {liveDevices.map((device, i) => (
             <DeviceCard
               key={device.id.toString()}
               device={device}

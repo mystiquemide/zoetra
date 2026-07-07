@@ -8,6 +8,7 @@ export interface TourStep {
   label: string
   title: string
   body: string
+  link?: { href: string; label: string }
 }
 
 interface Spot {
@@ -113,7 +114,22 @@ export function OnboardingTour({
           </button>
         </div>
         <h3 className="mb-2 text-base font-semibold tracking-tight text-z-alive">{current.title}</h3>
-        <p className="mb-[18px] text-[13px] leading-relaxed text-z-text-dim">{current.body}</p>
+        <p className="mb-[18px] text-[13px] leading-relaxed text-z-text-dim">
+          {current.body}
+          {current.link && (
+            <>
+              {" "}
+              <a
+                href={current.link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-z-alive underline underline-offset-2"
+              >
+                {current.link.label}
+              </a>
+            </>
+          )}
+        </p>
         <div className="flex items-center justify-between">
           <button onClick={onEnd} className="text-[13px] text-z-text-dim hover:text-z-text">
             Skip
