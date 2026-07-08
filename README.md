@@ -28,6 +28,7 @@ None of this works without BOT Chain. Sub-second finality and near-zero fees are
 2. Every card's score is computed live on-chain from `block.timestamp`, not cached or polled from a database.
 3. Stop a device's daemon (`Ctrl+C` on `daemon/heartbeat.mjs`) and its score decays visibly within seconds.
 4. Once a device's score falls below its own SLA, the Slash button activates for anyone with a connected wallet, and pays a bounty for catching the breach.
+5. The "Live event feed" on `/live` only shows events emitted after your browser tab opened (see `src/hooks/use-live-feed.ts`); it does not backfill history. A fresh page load will say "Waiting for the first heartbeat..." until the next one lands, which happens within each device's declared interval (60s for the live demo devices). This is expected, not a bug, the device cards above it already show real, accumulated on-chain `recv`/`exp` counts and score.
 
 ## How it works
 
