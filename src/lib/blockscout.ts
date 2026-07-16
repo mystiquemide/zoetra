@@ -2,7 +2,7 @@ import { activeChain } from "@/lib/chains"
 
 // Thin client over Blockscout's public v2 REST API (no auth, same API already
 // used for the bytecode check). Used to power our own tx/address detail
-// pages so judges never have to leave the app to verify a hash, the external
+// pages so users never have to leave the app to verify a hash, the external
 // BOTScan link stays available on every page as the ultimate cross-check.
 
 const BASE_URL = activeChain.blockExplorers.default.url

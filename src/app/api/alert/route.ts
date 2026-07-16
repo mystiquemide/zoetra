@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 
-// The one exception to "no backend" in this project (see AGENTS.md and
-// docs/ARCHITECTURE.md ADR-1). This is a stateless serverless function, not a
+// This is a stateless serverless function, not a
 // server: it holds no data, the chain is still the only source of truth, this
 // route only relays a notification the client already derived from on-chain
 // reads to a webhook URL the user supplies and stores in their own browser.

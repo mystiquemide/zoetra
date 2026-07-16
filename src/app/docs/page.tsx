@@ -27,7 +27,7 @@ export default function DocsPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-[22px] font-semibold text-z-alive">Judge Verification Path</h2>
+          <h2 className="mb-3 text-[22px] font-semibold text-z-alive">Verification Path</h2>
           <ol className="flex list-decimal flex-col gap-2.5 pl-5 text-z-text-soft">
             <li>Open the live dashboard and confirm the network is BOT Chain.</li>
             <li>Open the contract link and verify the address on BOTScan.</li>

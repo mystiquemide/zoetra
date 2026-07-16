@@ -4,7 +4,7 @@
 
 Zoetra is a permissionless heartbeat SLA registry for DePIN operators on **BOT Chain mainnet**. A device registers on-chain, stakes native BOT, and promises to send heartbeat transactions at a declared interval. If its uptime score falls below its own SLA, anyone can slash part of the stake and earn a bounty.
 
-This is not a monitoring dashboard with private uptime claims. The chain is the product: every registration, heartbeat, score, slash, bounty, and burn is reproducible from BOTScan.
+This is not a private monitoring dashboard. The chain is the product: every registration, heartbeat, score, slash, bounty, and burn is reproducible from BOTScan.
 
 [![CI](https://github.com/mystiquemide/zoetra/actions/workflows/ci.yml/badge.svg)](https://github.com/mystiquemide/zoetra/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/mystiquemide/zoetra/actions/workflows/codeql.yml/badge.svg)](https://github.com/mystiquemide/zoetra/actions/workflows/codeql.yml)
@@ -13,7 +13,7 @@ This is not a monitoring dashboard with private uptime claims. The chain is the 
 [![Solidity 0.8.28](https://img.shields.io/badge/Solidity-0.8.28-363636)](./contracts)
 [![BOT Chain](https://img.shields.io/badge/chain-BOT%20Chain%20Mainnet-2DD4A7)](https://dev-docs.botchain.ai/docs/Developers/quick-guide/)
 
-## Live proof
+## Live product
 
 | Surface | Link |
 |---|---|
@@ -24,26 +24,15 @@ This is not a monitoring dashboard with private uptime claims. The chain is the 
 | Verified source | https://scan.botchain.ai/address/0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac#code |
 | Deploy tx | https://scan.botchain.ai/tx/0xe2c09b1247462eb055a60250bf6915f5087c0432d96dedabb95f8fa9650b7258 |
 | Production device registration | https://scan.botchain.ai/tx/0x055bd7b9aba0272cd0530fda82bb102d5d8783347c575419cca298a8eacb679a |
-| Latest heartbeat proof | https://scan.botchain.ai/tx/0x87fdd75a61ddfce701a0028030023b9a577c20c5f67eafa9addf2028163fec21 |
-| Retired review device | https://scan.botchain.ai/tx/0xf2907f48405a4b39d3b4108745b39c592951d56fd51c004b3e4c27f06e409456 |
-
-## Try it in 2 minutes
-
-1. Open https://zoetra.xyz/live.
-2. Confirm the verification panel shows BOT Chain, detected bytecode, the mainnet contract, and the latest block.
-3. Open the contract on BOTScan from the panel.
-4. Connect a wallet on BOT Chain mainnet if you want to register or slash.
-5. If you need BOT, bridge funds at https://bridge.botchain.ai and swap at https://dex.botchain.ai.
-6. Register a device with a name, interval, SLA, and at least `0.05 BOT` stake.
-7. Run the heartbeat client with that device id. If the heartbeat stops, the score decays on-chain and eventually becomes slashable.
+| Heartbeat proof | https://scan.botchain.ai/tx/0x2e3d6fa119bb4dc39ebd967e96530469ce6025219e876a3fda32f4b66375e61b |
 
 ## How it works
 
 | Operation | What happens on BOT Chain mainnet |
 |---|---|
-| `register(name, intervalSec, slaBps)` | The operator stakes native BOT and creates a device promise. |
+| `register(name, intervalSec, slaBps)` | The operator stakes native BOT and creates a device uptime promise. |
 | `heartbeat(id)` | The operator wallet proves the device is still alive. |
-| `scoreOf(id)` | The contract computes the uptime score live from `block.timestamp` and recorded beats. |
+| `scoreOf(id)` | The contract computes uptime live from `block.timestamp` and recorded beats. |
 | `slash(id)` | Anyone can cut a breached device's stake once score falls below its SLA. |
 | `deregister(id)` | The operator stops the obligation and starts the withdrawal cooldown. |
 | `withdraw(id)` | The operator withdraws remaining stake after cooldown. |
@@ -58,50 +47,29 @@ The contract does not need an admin, database, keeper, oracle, or private monito
 
 ## BOT Chain integrations
 
-| Integration | Where it is used | Why it matters |
-|---|---|---|
-| BOT Chain mainnet `677` | Contract, dashboard, wallet writes, heartbeat client | Real production settlement for uptime promises and slashing. |
-| Native BOT | Device stake, gas, caller bounty, burn path | No ERC-20 approval layer. The same asset pays gas and secures the SLA. |
-| BOT Chain RPC `https://rpc.botchain.ai` | Frontend reads, daemon writes, verification scripts | Live chain state is the source of truth. |
-| BOTScan `https://scan.botchain.ai` | Contract proof, tx proof, explorer links, README links | Judges can independently verify every claim. |
-| BOT Chain bridge | User funding path | New operators can bring funds onto BOT Chain mainnet. |
-| BOT Chain DEX | BOT acquisition path | Users can swap bridged assets into BOT for gas and stake. |
-| BO Wallet via WalletConnect | Mobile wallet path | BOT Chain's mobile wallet can connect even without a browser extension. |
-| wagmi + viem + RainbowKit | Read/write frontend | Wallet connection, chain switching, contract reads, and transactions. |
-| Hardhat + verified source | Contract deployment and verification | Reproducible build, tests, deployment, and BOTScan source verification. |
-| Vercel | Public product hosting | Fast judge-accessible product URL with production environment variables. |
-| GitHub Actions CI + CodeQL | Repo quality gates | Tests and security scanning run on pushed commits. |
-| Stateless webhook relay | Optional breach notifications | Browser-held webhook URL can receive alerts without adding a database. |
-
-## Hackathon winner plan
-
-This repo is structured around the judge surfaces that matter for BOT Chain Builder Challenge review.
-
-| Judge surface | Zoetra proof |
+| Integration | Where it is used |
 |---|---|
-| Load-bearing chain use | The heartbeat protocol needs low-fee, fast-finality transactions. BOT Chain is not a logo placement. |
-| Mainnet deployment | Contract is live and verified on BOT Chain mainnet. |
-| Public product | `zoetra.xyz/live` reads the mainnet contract directly. |
-| Verifiable proof | Contract, device registration, heartbeat, bytecode, and device state are all on BOTScan. |
-| Completeness | Contract, app, wallet connection, heartbeat client, docs, CI, CodeQL, and production deployment are shipped. |
-| Innovation | Uptime is scored by an on-chain SLA market, not by a closed monitoring vendor. |
-| Judge speed | The live product and proof links let a reviewer verify the project in minutes. |
-| Honest limitations | Physical-device attestation is not solved yet; today the protocol proves a registered operator key sent heartbeats. |
+| BOT Chain mainnet `677` | Contract state, dashboard reads, wallet writes, heartbeat transactions, and slashing. |
+| Native BOT | Device stake, gas, caller bounty, and burn path. |
+| BOT Chain RPC `https://rpc.botchain.ai` | Frontend reads, daemon writes, and verification scripts. |
+| BOTScan `https://scan.botchain.ai` | Contract source, transaction history, and explorer links. |
+| BOT Chain bridge | User funding path into BOT Chain. |
+| BOT Chain DEX | Swap path into BOT for gas and stake. |
+| BO Wallet via WalletConnect | Mobile wallet connection through QR pairing. |
+| wagmi + viem + RainbowKit | Wallet connection, chain reads, and contract transactions. |
+| Hardhat | Contract testing, deployment, and verification. |
+| Vercel | Public production hosting. |
+| GitHub Actions + CodeQL | CI and static security checks. |
+| Stateless webhook relay | Optional breach notifications without storing webhook URLs server-side. |
 
-## Hackathon judge review playbook
+## Verification path
 
-A skeptical judge should test Zoetra this way:
-
-| Check | What to verify | Expected result |
-|---|---|---|
-| Product loads | Open `zoetra.xyz/live` | The dashboard renders live mainnet state. |
-| No private database claims | Compare the dashboard contract with BOTScan | Same mainnet contract address. |
-| Bytecode exists | Check verification panel or BOTScan | Bytecode detected and source verified. |
-| Device is real | Inspect device `#2` and its registration tx | Registered as `zoetra-mainnet-sentinel` with `0.05 BOT` stake. |
-| Heartbeat is real | Open latest heartbeat tx | Transaction calls `heartbeat` on the registry. |
-| Scoring is contract-owned | Let a device miss intervals or inspect `scoreOf` | Score changes from on-chain time and beat history. |
-| Slashing is permissionless | Connect any funded wallet when a device breaches | Slash button becomes executable below SLA. |
-| No admin backdoor | Inspect verified contract | No owner-only override or admin scoring function. |
+1. Open https://zoetra.xyz/live.
+2. Confirm the verification panel shows BOT Chain, detected bytecode, the mainnet contract, and the latest block.
+3. Open the contract on BOTScan from the panel.
+4. Inspect the production device and heartbeat transactions.
+5. Connect a funded wallet on BOT Chain mainnet if you want to register a device or slash a breached one.
+6. If you need BOT, bridge funds at https://bridge.botchain.ai and swap at https://dex.botchain.ai.
 
 ## Product screens
 
@@ -126,10 +94,10 @@ No database, no account system, no admin key. The only source of truth is `Zoetr
 ## Repository layout
 
 ```text
-contracts/   Hardhat workspace: ZoetraRegistry.sol, tests, deployment and device scripts
+contracts/   Hardhat workspace: ZoetraRegistry.sol, tests, deployment scripts
 daemon/      heartbeat.mjs - one process per device, viem wallet client
 src/         Next.js App Router product (wagmi + RainbowKit + viem)
-docs/        Architecture, deployment, product notes, and verification plans
+docs/        Product architecture and deployment notes
 ```
 
 ## Run locally
@@ -184,7 +152,7 @@ npm start
 
 ## What is real
 
-Everything in the shipped product path is real: the contract is on BOT Chain mainnet, the source is verified, the dashboard reads live chain state, and the heartbeat/client path sends real transactions. There are no mocked dashboard values in the production `/live` path.
+Everything in the shipped product path is real: the contract is on BOT Chain mainnet, the source is verified, the dashboard reads live chain state, and the heartbeat client sends real transactions. There are no mocked dashboard values in the production `/live` path.
 
 ## License
 
