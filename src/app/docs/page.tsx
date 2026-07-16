@@ -16,6 +16,28 @@ export default function DocsPage() {
         </section>
 
         <section>
+          <h2 className="mb-3 text-[22px] font-semibold text-z-alive">Mainnet Integrations</h2>
+          <ul className="flex list-disc flex-col gap-2.5 pl-5 text-z-text-soft">
+            <li><strong className="text-z-text">BOT Chain mainnet:</strong> the contract, scores, stakes, heartbeats, and slashes all settle on chain ID 677.</li>
+            <li><strong className="text-z-text">BOTScan:</strong> every contract and transaction link points to <a href="https://scan.botchain.ai" target="_blank" rel="noopener noreferrer" className="font-semibold text-z-alive underline underline-offset-2">scan.botchain.ai</a>.</li>
+            <li><strong className="text-z-text">Bridge + DEX:</strong> operators can bridge funds at <a href="https://bridge.botchain.ai" target="_blank" rel="noopener noreferrer" className="font-semibold text-z-alive underline underline-offset-2">bridge.botchain.ai</a> and swap for BOT at <a href="https://dex.botchain.ai" target="_blank" rel="noopener noreferrer" className="font-semibold text-z-alive underline underline-offset-2">dex.botchain.ai</a>.</li>
+            <li><strong className="text-z-text">WalletConnect:</strong> mobile wallets, including BO Wallet, can connect through QR pairing.</li>
+            <li><strong className="text-z-text">Heartbeat daemon:</strong> operators can run the reference client to send real heartbeat transactions from their device wallet.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="mb-3 text-[22px] font-semibold text-z-alive">Judge Verification Path</h2>
+          <ol className="flex list-decimal flex-col gap-2.5 pl-5 text-z-text-soft">
+            <li>Open the live dashboard and confirm the network is BOT Chain.</li>
+            <li>Open the contract link and verify the address on BOTScan.</li>
+            <li>Confirm bytecode is detected and the source is verified.</li>
+            <li>Inspect the production device and its heartbeat proof.</li>
+            <li>Review the verified contract to confirm there is no admin scoring override.</li>
+          </ol>
+        </section>
+
+        <section>
           <h2 className="mb-4 text-[22px] font-semibold text-z-alive">Glossary</h2>
           <table className="w-full border-collapse text-sm">
             <tbody>

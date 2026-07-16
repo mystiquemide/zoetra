@@ -4,7 +4,7 @@ const hre = require("hardhat");
 
 async function main() {
   const network = hre.network.name;
-  const expectedChainIds = { bohr: 968, botchain: 677 };
+  const expectedChainIds = { botchain: 677 };
   const expectedChainId = expectedChainIds[network];
   const actualChainId = Number((await hre.ethers.provider.getNetwork()).chainId);
 

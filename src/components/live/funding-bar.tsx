@@ -8,7 +8,7 @@ const DISMISS_KEY = "zoetra_bot_chain_funding_bar_dismissed"
 export const BOT_CHAIN_BRIDGE_URL = "https://bridge.botchain.ai"
 export const BOT_CHAIN_DEX_URL = "https://dex.botchain.ai"
 
-export function FaucetBar() {
+export function FundingBar() {
   const { dismissed, dismiss } = useDismissed(DISMISS_KEY)
 
   if (dismissed) return null

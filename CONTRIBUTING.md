@@ -41,7 +41,7 @@ No database, no auth, no extra services to stand up  -  the chain is the only ba
 
 ## Reporting bugs
 
-Use the [bug report template](.github/ISSUE_TEMPLATE/bug_report.md). Include the network (testnet/mainnet), a tx hash if relevant, and steps to reproduce.
+Use the [bug report template](.github/ISSUE_TEMPLATE/bug_report.md). Include the BOT Chain mainnet tx hash or address if relevant, and steps to reproduce.
 
 ## Code of Conduct
 

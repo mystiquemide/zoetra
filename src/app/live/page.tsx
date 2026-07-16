@@ -16,7 +16,7 @@ import { RegisterModal } from "@/components/live/register-modal"
 import { VerificationPanel } from "@/components/live/verification-panel"
 import { AlertsSettings } from "@/components/live/alerts-settings"
 import { OnboardingTour, type TourStep } from "@/components/live/onboarding-tour"
-import { BOT_CHAIN_BRIDGE_URL, FaucetBar } from "@/components/live/faucet-bar"
+import { BOT_CHAIN_BRIDGE_URL, FundingBar } from "@/components/live/funding-bar"
 import { useWebhookUrl } from "@/hooks/use-webhook-url"
 import { useBreachAlerts } from "@/hooks/use-breach-alerts"
 import { activeChain } from "@/lib/chains"
@@ -116,11 +116,11 @@ export default function LivePage() {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <a
-            href="/demo"
+            href="/proof"
             className="flex items-center gap-2 rounded-[10px] border border-z-border bg-z-surface px-[18px] py-[11px] text-sm font-semibold text-z-text"
           >
             <Image src="/design/zoetra-logo.png" alt="" width={15} height={15} className="h-[15px] w-[15px] object-contain" />
-            Demo
+            Verification
           </a>
           <WalletConnectButton />
           <Button
@@ -148,7 +148,7 @@ export default function LivePage() {
         </div>
       )}
 
-      <FaucetBar />
+      <FundingBar />
 
       <div className="mb-6 grid grid-cols-1 items-start gap-5 lg:grid-cols-[1fr_340px]">
         <StatsStrip

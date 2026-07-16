@@ -6,7 +6,6 @@
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
-    "deploy:testnet": "hardhat run scripts/deploy.js --network bohr",
     "deploy:mainnet": "hardhat run scripts/deploy.js --network botchain"
   },
   "devDependencies": {

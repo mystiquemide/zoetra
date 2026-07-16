@@ -13,7 +13,7 @@ const DEVICE_ID = requireEnv("DEVICE_ID");
 const INTERVAL_MS = Number(process.env.INTERVAL_MS || "5000");
 const MAX_BEATS = Number(process.env.MAX_BEATS || "0");
 const REGISTRY_ADDRESS = requireEnv("REGISTRY_ADDRESS");
-const CHAIN_ID = Number(process.env.CHAIN_ID || "968");
+const CHAIN_ID = Number(process.env.CHAIN_ID || "677");
 
 const registryAbi = [
   {

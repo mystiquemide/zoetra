@@ -1,139 +1,120 @@
-# Zoetra  -  Architecture
+# Zoetra Architecture
 
-## System Overview
+Zoetra is a mainnet BOT Chain product. The registry contract is the source of truth; the web app and heartbeat client only read from or write to that contract.
 
+## Production network
+
+| Item | Value |
+|---|---|
+| Network | BOT Chain mainnet |
+| Chain ID | `677` |
+| RPC | `https://rpc.botchain.ai` |
+| WebSocket RPC | `wss://ws-rpc.botchain.ai` |
+| Explorer | `https://scan.botchain.ai` |
+| Contract | `0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac` |
+| Funding path | Bridge at `https://bridge.botchain.ai`, then swap at `https://dex.botchain.ai` |
+
+## System overview
+
+```text
+Device operator wallet ── register + stake BOT ──▶ ZoetraRegistry
+Heartbeat client ─────── heartbeat(id) tx ───────▶ ZoetraRegistry
+Any funded wallet ────── slash(id) if breached ─▶ ZoetraRegistry
+Zoetra web app ───────── read state/events ──────▶ ZoetraRegistry
+BOTScan ──────────────── public proof ──────────▶ verified contract + txs
 ```
-┌──────────────┐  heartbeat tx (interval i)  ┌─────────────────────┐
-│ daemon (PC)  │────────────────────────────▶│                     │
-├──────────────┤                             │  ZoetraRegistry.sol │
-│ daemon (VM)  │────────────────────────────▶│  BOT Chain mainnet  │
-├──────────────┤                             │  (677, botchain.ai) │
-│ daemon (3rd) │────────────────────────────▶│                     │
-└──────────────┘                             └──────────┬──────────┘
-                                                        │ events + views
-                          ┌─────────────────────────────┼──────────────┐
-                          ▼                             ▼              ▼
-                 Next.js dashboard              Blockscout       verifier wallet
-                 (Vercel, read-only RPC         (scan.botchain.ai, calls slash()
-                  + wallet for register/slash)   public proof)
-```
 
-No backend, no database. The chain is the single source of truth; the dashboard is a pure view over events and view functions. This is deliberate: it maximizes the 35% integration score and means every UI number is reproducible from the explorer.
+There is no database, account server, scoring backend, keeper, oracle, or admin key. The only state that matters is on BOT Chain mainnet.
 
-## Networks
+## Contract model
 
-| | Mainnet | Legacy testnet |
-|---|---|---|
-| Chain ID | 677 | 968 |
-| RPC | https://rpc.botchain.ai | https://rpc.bohr.life |
-| WS | wss://ws-rpc.botchain.ai | n/a (poll) |
-| Explorer | https://scan.botchain.ai | https://scan.bohr.life |
-| Get BOT | Bridge at https://bridge.botchain.ai, then swap at https://dex.botchain.ai | deprecated faucet-only testing |
-| Verified live | Jul 16 (mainnet contract deployed + verified) | Jul 3 (eth_chainId 0x3c8) |
-
-Docs: https://dev-docs.botchain.ai/docs/Developers/quick-guide/
-
-## Contract: ZoetraRegistry.sol (~150 lines, Solidity ^0.8.28)
-
-### Storage
+`ZoetraRegistry.sol` stores each device as:
 
 ```solidity
 struct Device {
-    address operator;      // signer allowed to beat; receives withdrawals
-    uint128 stake;         // native BOT, wei
-    uint64  windowStart;   // current bucket start (unix)
-    uint64  lastBeat;
-    uint64  deregisteredAt;// 0 while active
-    uint64  lastSlashAt;
-    uint32  intervalSec;   // declared heartbeat interval, 5..300
-    uint32  beatsCurr;     // beats in current bucket
-    uint32  beatsPrev;     // beats in previous bucket
-    uint16  slaBps;        // SLA threshold, e.g. 9000 = 90%
-    string  name;
+    address operator;
+    uint128 stake;
+    uint64 registeredAt;
+    uint64 windowStart;
+    uint64 lastBeat;
+    uint64 deregisteredAt;
+    uint64 lastSlashAt;
+    uint32 intervalSec;
+    uint32 beatsCurr;
+    uint32 beatsPrev;
+    uint16 slaBps;
+    string name;
 }
-uint256 public deviceCount;               // ids are 1..deviceCount
-mapping(uint256 => Device) public devices;
 ```
 
-Constants: `WINDOW_BEATS = 20` (bucket = 20 × interval), `MIN_STAKE = 0.05 ether`, `SLASH_BPS = 2000` (20% of stake per slash), `BOUNTY_BPS = 1000` (10% of slashed amount to caller), `WITHDRAW_COOLDOWN = 60s`, `SLASH_COOLDOWN = one bucket`.
+Constants:
 
-### Score math (two-bucket sliding window)
+| Constant | Meaning |
+|---|---|
+| `MIN_STAKE = 0.05 ether` | Minimum BOT stake to register. |
+| `MIN_INTERVAL = 5` | Fastest heartbeat interval. |
+| `MAX_INTERVAL = 300` | Slowest heartbeat interval. |
+| `WINDOW_BEATS = 20` | Rolling score bucket size. |
+| `SLASH_BPS = 2000` | 20% of remaining stake can be cut per valid slash. |
+| `BOUNTY_BPS = 1000` | 10% of the cut goes to the caller as bounty. |
 
-Bucket length `L = intervalSec * WINDOW_BEATS`. On every heartbeat, roll buckets: if `now - windowStart >= 2L`, zero both and restart; else if `>= L`, shift curr→prev, advance windowStart by L.
+## Score math
 
-`scoreOf(id)` (view, no state change; rolls virtually):
-```
-elapsed  = now - windowStart          (after virtual roll)
-expected = (L + elapsed) / intervalSec         // trailing prev + partial curr
-received = beatsPrev + beatsCurr               // after virtual roll, capped
-score    = min(10000, received * 10000 / max(expected, 1))
-```
-Properties: full uptime holds ~10000 bps; a killed device visibly decays within a few missed intervals because `expected` keeps growing while `received` freezes; recovery climbs as new beats land and dead buckets age out (fully clean after 2L).
+Zoetra uses a two-bucket rolling window.
 
-### Functions
-
-| Function | Access | Behavior |
-|---|---|---|
-| `register(name, intervalSec, slaBps) payable` | anyone | `msg.value >= MIN_STAKE`, `5 <= interval <= 300`, `5000 <= slaBps <= 9999`. Emits `Registered` |
-| `heartbeat(id)` | operator only | active device; rolls buckets; `beatsCurr++`; emits `Beat(id, timestamp, score)` |
-| `scoreOf(id) → uint16` | view | bps as above |
-| `slash(id)` | anyone | requires active, `scoreOf < slaBps`, `now - lastSlashAt >= SLASH_COOLDOWN`. `amount = stake * SLASH_BPS / 10000`; bounty to caller, remainder to `0x...dEaD`; emits `Slashed(id, caller, amount, bounty, score)` |
-| `deregister(id)` | operator | sets `deregisteredAt`; beats stop counting |
-| `withdraw(id)` | operator | after cooldown; transfers remaining stake; deletes device; emits `Withdrawn` |
-| `getDevices(offset, limit) → Device[] + ids + scores` | view | enumeration for the UI, no multicall dependency |
-
-### Security posture
-- Checks-effects-interactions everywhere; stake transfers last; no reentrancy surface beyond `withdraw`/`slash` transfers (state zeroed/decremented before send)
-- `call{value:}` with success require, no `transfer`
-- Slash bounty caps griefing: caller pays gas, gets bounty only on a genuinely breached device; cooldown prevents slash-draining in one block
-- No owner/admin functions at all: nothing to rug, nothing to audit-flag; constants are immutable by design (a deliberate v1 tradeoff, documented in the roadmap)
-- Operator key on devices holds only the BOT needed for gas plus its own stake
-
-## Daemon (`daemon/heartbeat.mjs`)
-
-Plain Node (no build step), viem wallet client. Env: `RPC_URL`, `PRIVATE_KEY`, `DEVICE_ID`, `INTERVAL_MS`. Loop: `sendTransaction(heartbeat)` → log hash + confirm latency; sequential awaits keep nonces ordered; on RPC error exponential backoff (1s → 8s max) without drifting the schedule (next tick = start + n*interval, skipped ticks are simply missed beats, which is honest). SIGINT prints `daemon stopped` and exits, which is the on-camera kill.
-
-## Frontend (existing boilerplate, Next.js 16 App Router)
-
-```
-src/
-  lib/
-    chains.ts      # mainnet 677 by default; legacy testnet 968 opt-in via NEXT_PUBLIC_CHAIN
-    registry.ts    # address (env) + typed ABI
-    web3.ts        # wagmi config → RainbowKit, chains from chains.ts
-  hooks/
-    use-devices.ts # getDevices poll every 2s (react-query)
-    use-live-feed.ts # watchContractEvent Beat/Slashed/Registered, poll 1s
-  app/
-    page.tsx       # landing
-    live/page.tsx  # dashboard
-  components/
-    live/device-card.tsx   # pulse ring on Beat, score, stake, SLA, slash button
-    live/event-feed.tsx    # rolling feed, tx deep links to explorer
-    live/stats-strip.tsx   # total beats, active devices, slashes, chain badge
-    live/register-modal.tsx
+```text
+expected = expected heartbeats over the rolling window
+received = heartbeats received over the rolling window
+score = min(10000, received * 10000 / expected)
 ```
 
-Wallet states handled: disconnected (read-only dashboard still fully live), wrong network (switch prompt to BOT Chain mainnet / chain 677), pending/failed/confirmed tx (toasts with explorer links). Explorer base URL derives from active chain.
+Because `scoreOf(id)` uses `block.timestamp`, the score changes as time passes even when nobody sends a transaction. This is what makes a silent device decay without a backend worker.
 
-## Env
+## Frontend
 
+- Next.js App Router
+- wagmi + viem for contract reads/writes
+- RainbowKit for injected wallets and WalletConnect
+- BO Wallet support through WalletConnect QR pairing
+- `/live` reads device state, scores, explorer URLs, and bytecode status from BOT Chain mainnet
+- `/proof` gives the production verification walkthrough
+- `/tx/[hash]` and `/address/[addr]` provide in-app explorer-style decoding
+- `/api/alert` is a stateless relay for optional breach webhook notifications
+
+## Heartbeat client
+
+`daemon/heartbeat.mjs` signs `heartbeat(deviceId)` from the registered operator key.
+
+Required env:
+
+```text
+RPC_URL=https://rpc.botchain.ai
+CHAIN_ID=677
+REGISTRY_ADDRESS=0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac
+PRIVATE_KEY=...
+DEVICE_ID=...
+INTERVAL_MS=300000
 ```
-NEXT_PUBLIC_CHAIN=mainnet            # mainnet by default; testnet only for legacy local experiments
-NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=   # cloud.reown.com project, powers BO Wallet + mobile QR pairing
-NEXT_PUBLIC_REGISTRY_ADDRESS_TESTNET=
-NEXT_PUBLIC_REGISTRY_ADDRESS_MAINNET=
-DEPLOYER_PRIVATE_KEY=                # contracts/ only
-RPC_URL= PRIVATE_KEY= DEVICE_ID= INTERVAL_MS=   # daemon only
-```
 
-## ADRs
+`MAX_BEATS` can cap a controlled verification run. `0` means continuous.
 
-1. No database, chain-only reads. Reason: zero infra, every number independently verifiable. Cost: history limited to RPC log range; acceptable, Blockscout API is the fallback for deep history.
-2. Two-bucket sliding window on-chain instead of ring buffer. Reason: O(1) storage and gas per beat; visible decay and recovery; a ring buffer's extra gas cost buys nothing the product needs.
-3. Native BOT stake, no ERC-20. Reason: one fewer contract, one fewer approval step, and the stake is real BOT on BOT Chain mainnet.
-4. Permissionless slash with bounty. Reason: turns the trust model into a market; anyone can slash a breached device from their own wallet.
-5. Mainnet 677 primary. Reason: judges and users can verify real economic stake, real heartbeat proofs, and real slashing semantics on BOT Chain production infrastructure.
-6. Per-device interval on-chain (5s for the live devices, 30s for steady-state). Reason: interval is chosen per device with no redeploy needed, so gas economy and responsiveness are both tunable.
-7. One stateless serverless route (`/api/alert`) as the sole exception to "no backend," added for optional breach webhook alerts. Reason: it holds no data (webhook URL lives in localStorage, not a database) and reads nothing from the chain, it only relays a breach the client already detected from its own on-chain reads. Cost: technically a server-side code path exists now; mitigated by keeping it single-purpose, stateless, and never given database or chain-write access.
-8. Injected wallets + WalletConnect via a real registered project. Initially shipped injected-only (MetaMask, Coinbase extension, Rabby, Brave) because a placeholder WalletConnect project id made RainbowKit's SDK throw a console error every load. Reversed once a real project was registered at cloud.reown.com specifically to support BO Wallet, the mobile-only wallet BOT Chain's own dev docs list alongside MetaMask, since BO Wallet has no browser extension and can only connect via WalletConnect QR pairing. Verified via network requests that the SDK reaches `pulse.walletconnect.org` with the real project id (202 response), not the placeholder-id error from before.
+## Integrations
+
+| Integration | Role |
+|---|---|
+| BOT Chain mainnet | Settlement, scoring, staking, slashing. |
+| Native BOT | Gas, device stake, slash bounty, burn. |
+| BOTScan | Public proof for contract, txs, source verification. |
+| BOT Chain bridge | Funding route for users. |
+| BOT Chain DEX | Swap route into BOT. |
+| BO Wallet + WalletConnect | Mobile wallet connection. |
+| Vercel | Public production hosting. |
+| GitHub Actions + CodeQL | CI and static security checks. |
+
+## Trust boundaries
+
+- Zoetra never has user private keys.
+- The frontend cannot change scores; it only reads and submits user-signed transactions.
+- The heartbeat client only controls the wallet key the operator gives it.
+- The webhook relay stores nothing server-side.
+- Slashing and withdrawals are final once confirmed on BOT Chain mainnet.

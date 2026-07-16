@@ -15,13 +15,13 @@ If you find a security issue  -  a way to drain stake incorrectly, bypass the sl
 Email **splashmediahub@gmail.com** with:
 - A description of the issue and its impact
 - Steps to reproduce (a failing test against the Hardhat suite is ideal)
-- The network it affects (testnet chain 968, mainnet chain 677, or both)
+- The BOT Chain mainnet transaction, address, or route it affects
 
 Expect an acknowledgment within a few days. Once a fix is confirmed, we'll coordinate on disclosure timing before any public writeup.
 
 ## Out of scope
 
-- Issues that only affect BOT Chain's testnet faucet, RPC, or explorer infrastructure  -  report those to BOT Chain directly
+- Issues that only affect BOT Chain bridge, DEX, RPC, or explorer infrastructure  -  report those to BOT Chain directly
 - Social engineering against a device operator's own key management
 - Third-party wallet extension vulnerabilities (MetaMask, Rabby, etc.)  -  report those upstream
 

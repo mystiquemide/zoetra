@@ -1,4 +1,4 @@
-// Mainnet award-review setup: register one low-cost demo device on BOT Chain
+// Mainnet setup: register one low-cost production verification device on BOT Chain
 // mainnet. Reads the operator key from env or repo-root .secrets/deployer.env;
 // never commit secrets.
 const fs = require("fs");
@@ -47,7 +47,7 @@ async function main() {
   const Registry = await ethers.getContractFactory("ZoetraRegistry");
   const registry = Registry.attach(deployment.address);
 
-  const name = process.env.DEVICE_NAME || "zoetra-mainnet-demo";
+  const name = process.env.DEVICE_NAME || "zoetra-mainnet-sentinel";
   const intervalSec = Number(process.env.DEVICE_INTERVAL_SEC || "300");
   const slaBps = Number(process.env.DEVICE_SLA_BPS || "9000");
   const stakeBot = process.env.DEVICE_STAKE_BOT || "0.05";

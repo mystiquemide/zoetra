@@ -1,5 +1,5 @@
 // Polls a wallet's balance and spawns heartbeat.mjs the moment it's funded,
-// so you don't have to babysit the claim-then-restart cycle after a faucet
+// so you don't have to babysit the fund-then-restart cycle after topping up BOT
 // claim or topup. Reads the same env file heartbeat.mjs uses.
 import { createPublicClient, http, defineChain } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
@@ -14,7 +14,7 @@ loadEnvFile(envFile);
 
 const RPC_URL = requireEnv("RPC_URL");
 const PRIVATE_KEY = requireEnv("PRIVATE_KEY");
-const CHAIN_ID = Number(process.env.CHAIN_ID || "968");
+const CHAIN_ID = Number(process.env.CHAIN_ID || "677");
 const POLL_MS = Number(process.env.POLL_MS || "10000");
 const MIN_BALANCE_WEI = BigInt(process.env.MIN_BALANCE_WEI || "50000000000000000"); // 0.05 BOT
 

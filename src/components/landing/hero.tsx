@@ -20,8 +20,8 @@ export function Hero() {
             <Link href="/live" className="flex items-center py-2.5 text-sm font-medium text-z-alive">
               Live dashboard
             </Link>
-            <Link href="/demo" className="flex items-center py-2.5 text-sm font-medium text-z-alive">
-              Demo
+            <Link href="/proof" className="flex items-center py-2.5 text-sm font-medium text-z-alive">
+              Verification
             </Link>
           </div>
         </nav>

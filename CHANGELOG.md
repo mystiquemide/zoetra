@@ -14,5 +14,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Next.js dashboard with live device grid, verification panel, breach-alert webhooks, and a guided onboarding tour
 - In-app block explorer (`/tx/[hash]`, `/address/[addr]`) so on-chain claims are checkable without leaving the app
 - Wallet support for injected extensions and WalletConnect (including BOT Chain's BO Wallet)
-- Deployed to BOT Chain testnet (chain 968)
+- Deployed to BOT Chain mainnet (chain 677) with verified contract source
 - Public repository launch: README, CI, CodeQL, Dependabot, contributing guide, security policy, deployment docs

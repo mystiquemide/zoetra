@@ -24,7 +24,7 @@ export function Nav() {
     )
 
   // No mobile hamburger by design: this nav never carries more than 3-4
-  // items (logo, Live dashboard, Demo, optionally GitHub), which wraps
+  // items (logo, Live dashboard, Verification, optionally GitHub), which wraps
   // cleanly at any width via flex-wrap rather than needing a collapsed
   // menu. Revisit this if a 5th item is ever added.
   return (
@@ -44,8 +44,8 @@ export function Nav() {
             <Link href="/live" className={navLinkClass("/live")}>
               Live dashboard
             </Link>
-            <Link href="/demo" className={navLinkClass("/demo")}>
-              Demo
+            <Link href="/proof" className={navLinkClass("/proof")}>
+              Verification
             </Link>
             {!isDetailPage && (
               <a

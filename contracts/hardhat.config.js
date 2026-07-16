@@ -14,11 +14,6 @@ module.exports = {
     },
   },
   networks: {
-    bohr: {
-      url: process.env.BOHR_RPC_URL || "https://rpc.bohr.life",
-      chainId: 968,
-      accounts,
-    },
     botchain: {
       url: process.env.BOTCHAIN_RPC_URL || "https://rpc.botchain.ai",
       chainId: 677,

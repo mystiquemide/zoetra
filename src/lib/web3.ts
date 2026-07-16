@@ -1,7 +1,7 @@
 import { connectorsForWallets } from "@rainbow-me/rainbowkit"
 import { injectedWallet, coinbaseWallet, metaMaskWallet, walletConnectWallet } from "@rainbow-me/rainbowkit/wallets"
 import { createConfig, http } from "wagmi"
-import { botChainTestnet, botChainMainnet } from "@/lib/chains"
+import { botChainMainnet } from "@/lib/chains"
 
 // Real WalletConnect Cloud project (cloud.reown.com), registered specifically
 // to support BO Wallet, the mobile-only wallet BOT Chain's own dev docs list
@@ -31,9 +31,8 @@ const connectors = connectorsForWallets(
 
 export const config = createConfig({
   connectors,
-  chains: [botChainTestnet, botChainMainnet],
+  chains: [botChainMainnet],
   transports: {
-    [botChainTestnet.id]: http(),
     [botChainMainnet.id]: http(),
   },
   ssr: true,

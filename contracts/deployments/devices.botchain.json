@@ -1,15 +1,36 @@
-[
-  {
-    "network": "botchain",
-    "chainId": 677,
-    "registry": "0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac",
-    "deviceId": "1",
-    "operator": "0xAbf039f2DC31084F5E0713708C96068126a043e9",
-    "name": "zoetra-mainnet-demo",
-    "intervalSec": 300,
-    "slaBps": 9000,
-    "stakeBot": "0.05",
-    "registerTx": "0xd14d3aa25135c32536d6d0442fd53ac6314f3bac9d5f8a1edbca5f56a9834587",
-    "registeredAt": "2026-07-16T08:08:41.345Z"
-  }
-]
+{
+  "network": "botchain",
+  "chainId": 677,
+  "registry": "0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac",
+  "devices": [
+    {
+      "id": "2",
+      "name": "zoetra-mainnet-sentinel",
+      "operator": "0xAbf039f2DC31084F5E0713708C96068126a043e9",
+      "intervalSec": 300,
+      "slaBps": 9000,
+      "stakeBOT": "0.05"
+    }
+  ],
+  "txs": [
+    {
+      "action": "deregister",
+      "id": "1",
+      "hash": "0xf2907f48405a4b39d3b4108745b39c592951d56fd51c004b3e4c27f06e409456",
+      "status": 1
+    },
+    {
+      "action": "register",
+      "id": "2",
+      "hash": "0x055bd7b9aba0272cd0530fda82bb102d5d8783347c575419cca298a8eacb679a",
+      "status": 1
+    },
+    {
+      "action": "heartbeat",
+      "id": "2",
+      "hash": "0x87fdd75a61ddfce701a0028030023b9a577c20c5f67eafa9addf2028163fec21",
+      "status": 1
+    }
+  ],
+  "updatedAt": "2026-07-16T08:29:09.823Z"
+}

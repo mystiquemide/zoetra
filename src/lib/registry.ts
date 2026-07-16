@@ -1,5 +1,5 @@
 export const REGISTRY_ADDRESS = (process.env.NEXT_PUBLIC_REGISTRY_ADDRESS ||
-  "0x32550FbbB458380e2A198E97dABcc70fEe95b8E6") as `0x${string}`
+  "0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac") as `0x${string}`
 
 export const WINDOW_BEATS = 20
 export const MIN_STAKE_BOT = 0.05

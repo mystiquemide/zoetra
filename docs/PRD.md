@@ -1,100 +1,69 @@
-# Zoetra  -  Product Requirements Document
+# Zoetra PRD
 
-Entry for BOT Chain Builder Challenge #1 · DePIN / Real World track · Submit by Jul 8 2026, 23:59 UTC+8
+## Product
 
-## Research Summary
+Zoetra is a production BOT Chain mainnet heartbeat SLA registry for DePIN devices. Operators stake native BOT against a declared heartbeat interval and SLA. If a device stops sending heartbeats and its on-chain score falls below its SLA, any funded wallet can slash the device and receive a bounty.
 
-DePIN networks (compute, hotspot, sensor) pay devices for staying online, but uptime is self-reported through operator-controlled dashboards. There is no cryptographic proof a device was actually alive at a given moment. Existing approaches (Helium PoC, io.net monitoring) are network-specific and closed. No general-purpose, chain-verified liveness registry exists on any EVM chain, and the economics explain why: proving liveness requires one transaction per device per interval, which is cost-prohibitive on Ethereum (~$288/day/device at 3s intervals at $0.01/tx) and unavailable to Solidity teams on Solana.
+## Problem
 
-BOT Chain (chain ID 677) removes both blockers: 0.75s blocks, ~0.9s finality, near-zero fees, full EVM. Live-verified Jul 3: RPC https://rpc.botchain.ai answers, Blockscout at https://scan.botchain.ai (10.4M txs), faucet at https://faucet.botchain.ai/basic. Judging weights integration 35% / completeness 25% / innovation 20% / presentation 20%, with RPC-swap migrations explicitly downweighted. A heartbeat protocol makes the chain itself the product's engine, the strongest possible integration story. Competitive field (Telegram-recruited, first edition) predicts token deploys and ports clustered in the EVM Deployment track; DePIN track is expected to be thin.
+DePIN uptime is usually asserted by closed networks, private dashboards, or vendor-controlled monitors. A user cannot independently verify whether a device missed checks, how the score was computed, or whether penalties were applied fairly.
 
-## Overview
+## Solution
 
-Zoetra is a permissionless, on-chain heartbeat SLA registry for DePIN devices. Most existing DePIN networks build their own closed uptime system, tied to their own hardware; Zoetra is open to any device, from any network, that chooses to run its heartbeat client. Devices prove liveness by sending heartbeat transactions to a registry contract at their declared interval. The contract scores uptime over a rolling window, computed live from `block.timestamp` with no backend, no cron job, no indexer. Operators stake BOT against an SLA threshold; when a device's score breaches the threshold, anyone (not an admin) can call slash() and earn a bounty for catching it. Uptime stops being a marketing claim and becomes slashable, verifiable state. None of this is affordable without BOT Chain: sub-second finality and near-zero fees are what make a heartbeat every few seconds a real transaction instead of a toy.
+Put the uptime promise on BOT Chain mainnet:
 
-One line: uptime you can slash.
+1. A device operator registers a device and stakes BOT.
+2. The registered operator key sends heartbeat transactions.
+3. `scoreOf(id)` computes live uptime from chain time and heartbeat history.
+4. Anyone can slash once the device breaches its SLA.
+5. BOTScan can verify every state transition.
 
-Note on positioning: research (Jul 3-4) found adjacent claims in this space, notably Parasail's "first trust layer for DePIN" service-guarantee positioning, so Zoetra does not claim to be "the first permissionless SLA layer for DePIN" as an unqualified absolute. The defensible claim: to our research, no direct public equivalent exists to this exact model, device heartbeat transactions, on-chain SLA scores decaying live from block.timestamp, stake-backed uptime, and permissionless slashing, on an EVM chain. If a narrower "first" claim is wanted, scope it to "the first BOT Chain-native heartbeat SLA registry for DePIN devices."
+## Why BOT Chain
 
-## User Roles
+BOT Chain is load-bearing, not decorative:
 
-1. Device operator  -  registers a device, runs the heartbeat daemon, stakes BOT on an SLA target, withdraws stake on clean exit.
-2. Verifier (anyone)  -  watches scores, verifies beats on Blockscout, calls slash() on breached devices, earns a slash bounty.
-3. Observer  -  reads the live dashboard, cross-checks any beat or slash against the explorer without trusting Zoetra's UI.
+| Need | BOT Chain fit |
+|---|---|
+| Frequent heartbeat txs | Low fees make repeated heartbeat writes practical. |
+| Fast feedback | Fast blocks make decay/recovery visible quickly. |
+| Mainnet proof | Real BOT stake makes the SLA economically meaningful. |
+| Public verification | BOTScan exposes contract, source, and tx proof. |
+| User onboarding | Bridge + DEX provide a route to BOT for gas and stake. |
 
-## Core Features
+## Scope shipped
 
-F1. ZoetraRegistry contract (Solidity, BOT Chain)
-- register(name, interval, slaThresholdBps) payable  -  stake attached, interval bounded (5s–300s)
-- heartbeat(deviceId)  -  only device wallet, records beat, updates rolling window
-- scoreOf(deviceId) view  -  uptime in basis points over last WINDOW expected beats
-- slash(deviceId)  -  permissionless; valid only when score < threshold; burns slashPortion of stake, pays caller a bounty, emits Slashed
-- deregister + withdrawStake  -  operator exit with cooldown
-- Events for every state change: Registered, Beat, Slashed, Deregistered
+- Verified `ZoetraRegistry` contract on BOT Chain mainnet.
+- Public product at `https://zoetra.xyz/live`.
+- Wallet connection through injected wallets and WalletConnect.
+- BO Wallet-compatible mobile QR connection path.
+- Mainnet funding guidance through `bridge.botchain.ai` and `dex.botchain.ai`.
+- Heartbeat daemon for registered operators.
+- Optional stateless webhook relay for breach notifications.
+- In-app address and transaction pages.
+- CI and CodeQL on GitHub.
 
-F2. Heartbeat daemon (Node + viem)
-- One process per device, own funded key, fires heartbeat at the device's interval
-- Nonce-safe sequential sends, retry with backoff, clean SIGINT (demo kill)
-- Config via env: RPC, key, deviceId, interval
+## Mainnet proof
 
-F3. Live dashboard (Next.js, existing boilerplate)
-- Device grid: pulse animation on each confirmed beat, live score, SLA threshold, stake
-- Score sparkline per device (rolling window), decays visibly within seconds of missed beats
-- Event feed: every Beat/Slashed with deep link to scan.botchain.ai tx
-- Slash panel: connect wallet (RainbowKit, chain 677), call slash() on a breached device from the UI
-- Network badge: BOT Chain 677, RPC health indicator
-- Read path: viem watchContractEvent over RPC + Blockscout API v2 for history. No database; chain is the database.
+| Proof | Link |
+|---|---|
+| Contract | https://scan.botchain.ai/address/0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac |
+| Source verification | https://scan.botchain.ai/address/0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac#code |
+| Deploy tx | https://scan.botchain.ai/tx/0xe2c09b1247462eb055a60250bf6915f5087c0432d96dedabb95f8fa9650b7258 |
+| Production device registration | https://scan.botchain.ai/tx/0x055bd7b9aba0272cd0530fda82bb102d5d8783347c575419cca298a8eacb679a |
+| Heartbeat proof | https://scan.botchain.ai/tx/0x87fdd75a61ddfce701a0028030023b9a577c20c5f67eafa9addf2028163fec21 |
 
-F4. Registration flow (dashboard)
-- Connect wallet, register a device with name/interval/threshold/stake in one tx
+## Acceptance criteria
 
-## User Stories & Acceptance Criteria
+- Product reads BOT Chain mainnet only.
+- No mocked values in `/live`.
+- Contract source verified on BOTScan.
+- User can connect wallet, register device, and submit slash when conditions are met.
+- Operator can run heartbeat client with a private key and device id.
+- Docs explain how to get BOT through the bridge and DEX.
+- README exposes the judge proof path in under two minutes.
 
-US1: As an operator, I register a device with 0.5 BOT stake, 15s interval, 90% SLA.
-- AC: tx succeeds on chain 677; device appears in grid within one block; Registered event links to explorer.
+## Known limitations
 
-US2: As an operator, my running daemon keeps my score at 100%.
-- AC: with daemon running at interval i, score stays ≥ 9900 bps over any 5-minute stretch; each beat visible on Blockscout in <2s.
-
-US3: As an observer, I watch a killed device bleed.
-- AC: after daemon SIGKILL, score drops below 90% threshold within 10 missed beats; dashboard reflects each drop without page refresh.
-
-US4: As a verifier, I slash a breached device and get paid.
-- AC: slash() reverts while score ≥ threshold; succeeds below it; caller balance increases by bounty; device stake decreases; Slashed event in feed with tx link.
-
-US5: As an operator, I withdraw remaining stake after deregistering.
-- AC: withdraw before cooldown reverts; after cooldown returns exact remaining stake.
-
-## RICE Backlog
-
-| Item | Reach | Impact | Confidence | Effort | Score | Verdict |
-|---|---|---|---|---|---|---|
-| F1 contract | 10 | 10 | 9 | 3h | must | build |
-| F2 daemon | 10 | 9 | 9 | 2h | must | build |
-| F3 dashboard | 10 | 9 | 8 | 5h | must | build |
-| F4 register UI | 8 | 6 | 8 | 2h | must | build |
-| Slash-from-UI | 8 | 8 | 8 | 1h | must | build |
-| Score history via Blockscout API | 6 | 5 | 7 | 2h | should | build if time |
-| Multi-window analytics page | 3 | 3 | 6 | 3h | won't | cut |
-| SLA insurance market | 2 | 8 | 3 | days | won't | later |
-
-## KPIs (independently verifiable)
-
-- 3 real devices beating live
-- ≥ 1,000 real heartbeat txs on chain 677
-- Kill-to-visible-decay latency < 15s
-- On-chain slashes executed live, not simulated
-- Every dashboard number reproducible from scan.botchain.ai alone
-
-## Out of Scope (for now)
-
-- Insurance/coverage market on top of SLAs (see roadmap)
-- Device hardware attestation (TEE, signed sensor data)
-- Database persistence, auth
-- Token, governance, bridge functionality
-
-## Launch Checklist (product-level)
-
-- Contract address + verified source on scan.botchain.ai
-- GitHub repo public, README with run-it-yourself path
-- Live dashboard on Vercel
+- Current heartbeat proof proves operator-key activity, not hardware-rooted physical-device attestation.
+- Contract is tested and source-verified but not formally audited.
+- Users are responsible for gas, key security, RPC access, and device uptime.

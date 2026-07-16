@@ -13,13 +13,13 @@ const STEPS = [
   { num: "07", icon: PowerOff, title: "Restart the device and watch heartbeats resume.", detail: "Honesty is recoverable." },
 ]
 
-export default function DemoPage() {
+export default function ProofPage() {
   return (
     <div className="mx-auto max-w-3xl px-12 pt-16 pb-0">
       <div className="mb-12">
-        <h1 className="mb-3 text-4xl font-semibold tracking-tighter text-z-alive">Demo walkthrough</h1>
+        <h1 className="mb-3 text-4xl font-semibold tracking-tighter text-z-alive">Verification walkthrough</h1>
         <p className="mb-6 max-w-lg text-base leading-relaxed text-z-text-dim">
-          Verify Zoetra by following the same path used in the product recording.
+          Verify Zoetra by following the production proof path on BOT Chain mainnet.
         </p>
         <div className="flex flex-wrap gap-3">
           <Link
