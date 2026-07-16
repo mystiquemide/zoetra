@@ -102,7 +102,7 @@ Read-only visitors get the full live dashboard, no wall. Connect modal shows two
 | t | Shot | Line |
 |---|---|---|
 | 0:00 | `/live`, 3 cards pulsing green | "Three real machines, every pulse is a transaction on BOT Chain" |
-| 0:12 | Click a beat hash → scan.bohr.life | "Don't trust my dashboard, here's the explorer" |
+| 0:12 | Click a beat hash → scan.botchain.ai | "Don't trust my dashboard, here's the explorer" |
 | 0:25 | SSH to VM, kill daemon | "Now I kill the cloud node" |
 | 0:33 | Card: dot stops, status flips to At risk then Breached | "No heartbeat, the score is decaying on-chain, in seconds" |
 | 0:50 | Score crosses SLA, Slash enables, click it | "It breached its SLA, so anyone, including you, can slash its stake. I just earned a bounty for catching it" |

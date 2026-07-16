@@ -61,7 +61,8 @@ export default function DocsPage() {
         <section>
           <h2 className="mb-3 text-[22px] font-semibold text-z-alive">How to Register a Device</h2>
           <ol className="flex list-decimal flex-col gap-2.5 pl-5 text-z-text-soft">
-            <li>Connect a wallet on BOT Chain testnet (chain ID 968) or mainnet (chain ID 677).</li>
+            <li>Connect a wallet on BOT Chain mainnet (chain ID 677).</li>
+            <li>If you need gas or stake, bridge funds at <a href="https://bridge.botchain.ai" target="_blank" rel="noopener noreferrer" className="font-semibold text-z-alive underline underline-offset-2">bridge.botchain.ai</a>, then swap for BOT at <a href="https://dex.botchain.ai" target="_blank" rel="noopener noreferrer" className="font-semibold text-z-alive underline underline-offset-2">dex.botchain.ai</a>.</li>
             <li>Choose a name, a heartbeat interval (5-300 seconds), an SLA threshold (50-99.99%), and a stake (minimum 0.05 BOT).</li>
             <li>Submit. Your wallet is now the device&apos;s operator; only that wallet can send valid heartbeats for it.</li>
             <li>

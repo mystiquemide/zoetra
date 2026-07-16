@@ -9,10 +9,9 @@ Rules for any AI agent or human working in this repo. Read docs/ARCHITECTURE.md 
 - No database, no auth, no persistent server. The chain is the only source of truth. Do not add Prisma, NextAuth, or server-side state.
 - One deliberate exception: `src/app/api/alert/route.ts`, a stateless serverless relay for optional breach webhook alerts. It holds no data (webhook URL lives in the visitor's localStorage) and reads nothing from the chain itself; the client already derived the breach from on-chain reads and just asks this route to relay it. Do not add a second API route without a similarly strong reason, and never give any route database access or its own state.
 
-## Chain facts (verified Jul 3 2026, do not guess new ones)
-- Testnet (primary): 968, https://rpc.bohr.life, explorer https://scan.bohr.life
-- Mainnet (optional): 677, https://rpc.botchain.ai, wss://ws-rpc.botchain.ai, https://scan.botchain.ai
-- Faucet: https://faucet.botchain.ai/basic · Docs: https://dev-docs.botchain.ai/docs/Developers/quick-guide/
+## Chain facts (verified Jul 16 2026, do not guess new ones)
+- Mainnet (primary): 677, https://rpc.botchain.ai, wss://ws-rpc.botchain.ai, explorer https://scan.botchain.ai
+- Bridge: https://bridge.botchain.ai · DEX: https://dex.botchain.ai · Docs: https://dev-docs.botchain.ai/docs/Developers/quick-guide/
 
 ## Hard design rules (Mide's system, non-negotiable)
 - No emoji anywhere in UI, code comments, or docs. Icons are lucide-react only
@@ -33,8 +32,8 @@ Rules for any AI agent or human working in this repo. Read docs/ARCHITECTURE.md 
 
 ## Honesty rules (hackathon-critical)
 - Never fabricate chain data, tx hashes, or screenshots. If something fails, say so and fix or cut
-- Sample/fixture data is forbidden in the live dashboard; it reads chain 968 or shows an honest empty state
-- The judges must be able to reproduce every number from scan.bohr.life alone
+- Sample/fixture data is forbidden in the live dashboard; it reads chain 677 or shows an honest empty state
+- The judges must be able to reproduce every number from scan.botchain.ai alone
 
 ## Memory
 - Update memory.md after every working session: ACTIVE WORK checkboxes, SESSION LOG entry, decisions

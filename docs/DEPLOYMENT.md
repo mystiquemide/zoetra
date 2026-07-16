@@ -12,7 +12,7 @@ Zoetra's dashboard is a standard Next.js app with no database  -  deployment onl
 
 | Variable | Required | Description |
 |---|---|---|
-| `NEXT_PUBLIC_CHAIN` | no | `testnet` (default) or `mainnet` |
+| `NEXT_PUBLIC_CHAIN` | no | `mainnet` (default). `testnet` is only for legacy local experiments. |
 | `NEXT_PUBLIC_REGISTRY_ADDRESS` | no | Overrides the built-in registry address |
 | `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` | no | Reown/WalletConnect Cloud project id |
 

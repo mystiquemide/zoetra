@@ -16,7 +16,7 @@ import { RegisterModal } from "@/components/live/register-modal"
 import { VerificationPanel } from "@/components/live/verification-panel"
 import { AlertsSettings } from "@/components/live/alerts-settings"
 import { OnboardingTour, type TourStep } from "@/components/live/onboarding-tour"
-import { FaucetBar, FAUCET_URL } from "@/components/live/faucet-bar"
+import { BOT_CHAIN_BRIDGE_URL, FaucetBar } from "@/components/live/faucet-bar"
 import { useWebhookUrl } from "@/hooks/use-webhook-url"
 import { useBreachAlerts } from "@/hooks/use-breach-alerts"
 import { activeChain } from "@/lib/chains"
@@ -56,8 +56,8 @@ const TOUR_STEPS: TourStep[] = [
     target: "#tour-register-btn",
     label: "Register",
     title: "Register your own device",
-    body: "Set a name, heartbeat interval, SLA threshold, and stake, then put a heartbeat promise on-chain. Your stake is at risk automatically from that point on. You'll need testnet BOT in your wallet first,",
-    link: { href: FAUCET_URL, label: "get some free from the faucet" },
+    body: "Set a name, heartbeat interval, SLA threshold, and stake, then put a heartbeat promise on-chain. Your stake is at risk automatically from that point on. You'll need real BOT on BOT Chain mainnet in your wallet first.",
+    link: { href: BOT_CHAIN_BRIDGE_URL, label: "bridge funds to BOT Chain" },
   },
 ]
 

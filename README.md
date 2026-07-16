@@ -14,7 +14,7 @@ None of this works without BOT Chain. Sub-second finality and near-zero fees are
 [![BOT Chain](https://img.shields.io/badge/chain-BOT%20Chain-2DD4A7)](https://dev-docs.botchain.ai/docs/Developers/quick-guide/)
 
 - **Live dashboard:** https://zoetra.xyz/live
-- **Contract (BOT Chain testnet, chain 968):** [`0x32550FbbB458380e2A198E97dABcc70fEe95b8E6`](https://scan.bohr.life/address/0x32550FbbB458380e2A198E97dABcc70fEe95b8E6)
+- **Contract (BOT Chain mainnet, chain 677):** [`0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac`](https://scan.botchain.ai/address/0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac)
 
 ## Product screens
 
@@ -50,9 +50,9 @@ flowchart LR
     D1 -- heartbeat tx --> C
     D2 -- heartbeat tx --> C
     D3 -- heartbeat tx --> C
-    C[ZoetraRegistry.sol<br/>BOT Chain testnet 968]
+    C[ZoetraRegistry.sol<br/>BOT Chain mainnet 677]
     C -- events + view calls --> W[Next.js dashboard<br/>wagmi / viem, read-only]
-    C -- events + view calls --> B[Blockscout explorer<br/>scan.bohr.life]
+    C -- events + view calls --> B[Blockscout explorer<br/>scan.botchain.ai]
     U[Any wallet] -- slash tx --> C
     W -. connects to register/slash .-> U
 ```
@@ -91,7 +91,7 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full design and trust
 - **Frontend:** Next.js 16 (App Router), TypeScript, Tailwind v4
 - **Web3:** wagmi v2, viem, RainbowKit
 - **Daemon:** Node.js + viem wallet client, one process per device
-- **Explorer data:** Blockscout REST API (`scan.bohr.life`)
+- **Explorer data:** BOTScan / Blockscout REST API (`scan.botchain.ai`)
 
 ## Repository layout
 
@@ -112,10 +112,10 @@ npm install
 npx hardhat test                              # 23 tests, all passing
 cp .env.example .env                          # RPC URLs (non-secret)
 # put DEPLOYER_PRIVATE_KEY in a separate .env you control, e.g. ../.secrets/deployer.env
-npx hardhat run scripts/deploy.js --network bohr
+npx hardhat run scripts/deploy.js --network botchain
 ```
 
-Networks are pre-configured for both BOT Chain testnet (`bohr`, chain 968) and mainnet (`botchain`, chain 677).
+BOT Chain mainnet (`botchain`, chain 677) is the production target. The legacy Bohr testnet config remains available only for local experiments.
 
 ### Daemon (per device)
 
@@ -137,7 +137,7 @@ cp .env.example .env
 npm run dev
 ```
 
-`NEXT_PUBLIC_CHAIN=testnet|mainnet` switches the whole app (RPC, explorer links, contract address) between BOT Chain testnet and mainnet.
+`NEXT_PUBLIC_CHAIN=mainnet` points the app at BOT Chain mainnet. If unset, the app now defaults to mainnet.
 
 > **Note:** Next.js blocks client-side dev resource requests when the dev server is accessed via `127.0.0.1` without `allowedDevOrigins` configured (see `next.config.ts`), which silently breaks all on-chain reads. Use `localhost`, or add your origin there if you hit an empty dashboard locally.
 
@@ -147,7 +147,7 @@ See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for production deployment.
 
 | Variable | Where | Required | Description |
 |---|---|---|---|
-| `NEXT_PUBLIC_CHAIN` | dashboard | no | `testnet` (default) or `mainnet` |
+| `NEXT_PUBLIC_CHAIN` | dashboard | no | `mainnet` (default). `testnet` is only for legacy local experiments. |
 | `NEXT_PUBLIC_REGISTRY_ADDRESS` | dashboard | no | Overrides the built-in registry address |
 | `NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID` | dashboard | no | Reown/WalletConnect Cloud project id |
 | `RPC_URL` | daemon | yes | JSON-RPC endpoint for the target chain |
@@ -169,7 +169,7 @@ See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for production deployment.
 
 ## What's verifiable
 
-Contract, deployment, all three devices, every heartbeat, and every slash shown on the live dashboard are real transactions on BOT Chain testnet, independently checkable at [scan.bohr.life](https://scan.bohr.life/address/0x32550FbbB458380e2A198E97dABcc70fEe95b8E6). The dashboard's own `/tx/[hash]` and `/address/[addr]` pages decode and display the same data without leaving the app.
+Contract deployment, registered devices, heartbeats, and slashes shown on the live dashboard are real transactions on BOT Chain mainnet, independently checkable at [scan.botchain.ai](https://scan.botchain.ai/address/0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac). The dashboard's own `/tx/[hash]` and `/address/[addr]` pages decode and display the same data without leaving the app.
 
 Wallet support covers injected extensions (MetaMask, Coinbase Wallet, Rabby, Brave, etc.) and WalletConnect for mobile-only wallets, including **BO Wallet**, the wallet BOT Chain's own developer docs list alongside MetaMask. BO Wallet has no browser extension, so WalletConnect QR pairing is the only way to connect it, using a real registered project on Reown Cloud.
 
@@ -178,7 +178,7 @@ Wallet support covers injected extensions (MetaMask, Coinbase Wallet, Rabby, Bra
 **Now (cheap, no new architecture):**
 - Verify the deployed contract source on Blockscout
 - Publish the heartbeat client as an installable package instead of a copy-pasted script
-- Deploy to BOT Chain mainnet (677); the dual-chain config already exists
+- Expand the mainnet device fleet beyond the first verified demo device
 
 **Near-term:**
 - Device profile pages with historical uptime charts

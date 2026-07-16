@@ -52,13 +52,13 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-[22px] font-semibold text-z-alive">5. Testnet Notice</h2>
+          <h2 className="mb-3 text-[22px] font-semibold text-z-alive">5. Mainnet Notice</h2>
           <p className="text-z-text-soft">
-            At the time of writing, Zoetra&apos;s primary deployment operates on BOT Chain&apos;s testnet
-            (&quot;Bohr,&quot; chain ID 968). Testnet BOT tokens obtained via the public faucet have no
-            monetary value and are provided solely for testing purposes. Any deployment to BOT Chain mainnet
-            (chain ID 677) will use real BOT with real economic value, and all risks described in Section 8
-            apply with full force to mainnet use.
+            Zoetra&apos;s primary deployment operates on BOT Chain mainnet (chain ID 677). Registering a
+            device, staking, sending heartbeats, and slashing use real BOT with real economic value. Users
+            who need BOT should bridge funds at bridge.botchain.ai and swap for BOT at dex.botchain.ai.
+            All risks described in Section 8 apply
+            with full force to mainnet use.
           </p>
         </section>
 

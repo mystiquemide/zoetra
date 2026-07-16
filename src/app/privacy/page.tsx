@@ -101,7 +101,7 @@ export default function PrivacyPage() {
           <p className="text-z-text-soft">
             When you connect a wallet, that wallet extension (not Zoetra) mediates the connection and may
             have its own data practices. When the dashboard reads chain data, it queries public RPC
-            endpoints (e.g., rpc.bohr.life) operated by BOT Chain&apos;s infrastructure providers, not by
+            endpoints (e.g., rpc.botchain.ai) operated by BOT Chain&apos;s infrastructure providers, not by
             Zoetra; those requests are subject to those providers&apos; own logging practices, which Zoetra
             does not control.
           </p>

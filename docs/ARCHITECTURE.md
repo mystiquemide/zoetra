@@ -6,15 +6,15 @@
 ┌──────────────┐  heartbeat tx (interval i)  ┌─────────────────────┐
 │ daemon (PC)  │────────────────────────────▶│                     │
 ├──────────────┤                             │  ZoetraRegistry.sol │
-│ daemon (VM)  │────────────────────────────▶│  BOT Chain testnet  │
-├──────────────┤                             │  (968, bohr.life)   │
+│ daemon (VM)  │────────────────────────────▶│  BOT Chain mainnet  │
+├──────────────┤                             │  (677, botchain.ai) │
 │ daemon (3rd) │────────────────────────────▶│                     │
 └──────────────┘                             └──────────┬──────────┘
                                                         │ events + views
                           ┌─────────────────────────────┼──────────────┐
                           ▼                             ▼              ▼
                  Next.js dashboard              Blockscout       verifier wallet
-                 (Vercel, read-only RPC         (scan.bohr.life,  calls slash()
+                 (Vercel, read-only RPC         (scan.botchain.ai, calls slash()
                   + wallet for register/slash)   public proof)
 ```
 
@@ -22,14 +22,14 @@ No backend, no database. The chain is the single source of truth; the dashboard 
 
 ## Networks
 
-| | Testnet (primary) | Mainnet (optional E3) |
+| | Mainnet | Legacy testnet |
 |---|---|---|
-| Chain ID | 968 | 677 |
-| RPC | https://rpc.bohr.life | https://rpc.botchain.ai |
-| WS | n/a (poll) | wss://ws-rpc.botchain.ai |
-| Explorer | https://scan.bohr.life | https://scan.botchain.ai |
-| Faucet | https://faucet.botchain.ai/basic | same page |
-| Verified live | Jul 3 (eth_chainId 0x3c8) | Jul 3 (0x2a5) |
+| Chain ID | 677 | 968 |
+| RPC | https://rpc.botchain.ai | https://rpc.bohr.life |
+| WS | wss://ws-rpc.botchain.ai | n/a (poll) |
+| Explorer | https://scan.botchain.ai | https://scan.bohr.life |
+| Get BOT | Bridge at https://bridge.botchain.ai, then swap at https://dex.botchain.ai | deprecated faucet-only testing |
+| Verified live | Jul 16 (mainnet contract deployed + verified) | Jul 3 (eth_chainId 0x3c8) |
 
 Docs: https://dev-docs.botchain.ai/docs/Developers/quick-guide/
 
@@ -87,7 +87,7 @@ Properties: full uptime holds ~10000 bps; a killed device visibly decays within 
 - `call{value:}` with success require, no `transfer`
 - Slash bounty caps griefing: caller pays gas, gets bounty only on a genuinely breached device; cooldown prevents slash-draining in one block
 - No owner/admin functions at all: nothing to rug, nothing to audit-flag; constants are immutable by design (a deliberate v1 tradeoff, documented in the roadmap)
-- Operator key on devices holds only faucet dust + its own stake
+- Operator key on devices holds only the BOT needed for gas plus its own stake
 
 ## Daemon (`daemon/heartbeat.mjs`)
 
@@ -98,7 +98,7 @@ Plain Node (no build step), viem wallet client. Env: `RPC_URL`, `PRIVATE_KEY`, `
 ```
 src/
   lib/
-    chains.ts      # defineChain 968 + 677, active from NEXT_PUBLIC_CHAIN
+    chains.ts      # mainnet 677 by default; legacy testnet 968 opt-in via NEXT_PUBLIC_CHAIN
     registry.ts    # address (env) + typed ABI
     web3.ts        # wagmi config → RainbowKit, chains from chains.ts
   hooks/
@@ -114,12 +114,12 @@ src/
     live/register-modal.tsx
 ```
 
-Wallet states handled: disconnected (read-only dashboard still fully live), wrong network (switch prompt to 968), pending/failed/confirmed tx (toasts with explorer links). Explorer base URL derives from active chain.
+Wallet states handled: disconnected (read-only dashboard still fully live), wrong network (switch prompt to BOT Chain mainnet / chain 677), pending/failed/confirmed tx (toasts with explorer links). Explorer base URL derives from active chain.
 
 ## Env
 
 ```
-NEXT_PUBLIC_CHAIN=testnet            # testnet | mainnet
+NEXT_PUBLIC_CHAIN=mainnet            # mainnet by default; testnet only for legacy local experiments
 NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=   # cloud.reown.com project, powers BO Wallet + mobile QR pairing
 NEXT_PUBLIC_REGISTRY_ADDRESS_TESTNET=
 NEXT_PUBLIC_REGISTRY_ADDRESS_MAINNET=
@@ -131,9 +131,9 @@ RPC_URL= PRIVATE_KEY= DEVICE_ID= INTERVAL_MS=   # daemon only
 
 1. No database, chain-only reads. Reason: zero infra, every number independently verifiable. Cost: history limited to RPC log range; acceptable, Blockscout API is the fallback for deep history.
 2. Two-bucket sliding window on-chain instead of ring buffer. Reason: O(1) storage and gas per beat; visible decay and recovery; a ring buffer's extra gas cost buys nothing the product needs.
-3. Native BOT stake, no ERC-20. Reason: one fewer contract, one fewer approval step, faucet-fundable.
+3. Native BOT stake, no ERC-20. Reason: one fewer contract, one fewer approval step, and the stake is real BOT on BOT Chain mainnet.
 4. Permissionless slash with bounty. Reason: turns the trust model into a market; anyone can slash a breached device from their own wallet.
-5. Testnet 968 primary, mainnet 677 optional. Reason: free faucet gas for thousands of beats during early iteration; identical bytecode either way.
+5. Mainnet 677 primary. Reason: judges and users can verify real economic stake, real heartbeat proofs, and real slashing semantics on BOT Chain production infrastructure.
 6. Per-device interval on-chain (5s for the live devices, 30s for steady-state). Reason: interval is chosen per device with no redeploy needed, so gas economy and responsiveness are both tunable.
 7. One stateless serverless route (`/api/alert`) as the sole exception to "no backend," added for optional breach webhook alerts. Reason: it holds no data (webhook URL lives in localStorage, not a database) and reads nothing from the chain, it only relays a breach the client already detected from its own on-chain reads. Cost: technically a server-side code path exists now; mitigated by keeping it single-purpose, stateless, and never given database or chain-write access.
 8. Injected wallets + WalletConnect via a real registered project. Initially shipped injected-only (MetaMask, Coinbase extension, Rabby, Brave) because a placeholder WalletConnect project id made RainbowKit's SDK throw a console error every load. Reversed once a real project was registered at cloud.reown.com specifically to support BO Wallet, the mobile-only wallet BOT Chain's own dev docs list alongside MetaMask, since BO Wallet has no browser extension and can only connect via WalletConnect QR pairing. Verified via network requests that the SDK reaches `pulse.walletconnect.org` with the real project id (202 response), not the placeholder-id error from before.

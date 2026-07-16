@@ -18,7 +18,7 @@ No third-party analytics, no tracking, no PII. Every metric derives from chain e
 - ≥ 1,000 real `Beat` transactions
 - Kill-to-visible-decay < 15s
 - ≥ 1 on-chain `Slashed` event executed live
-- 100% of dashboard numbers reproducible from scan.bohr.life alone
+- 100% of dashboard numbers reproducible from scan.botchain.ai alone
 
 ## Events already carry the analytics
 `Beat(id, timestamp, score)` embeds the post-beat score, so historical score curves are reconstructable from logs alone without archive-node state reads. This is the ADR-1 payoff: Blockscout is the data warehouse.

@@ -20,7 +20,7 @@ export const botChainMainnet = defineChain({
 })
 
 export const activeChain =
-  process.env.NEXT_PUBLIC_CHAIN === "mainnet" ? botChainMainnet : botChainTestnet
+  process.env.NEXT_PUBLIC_CHAIN === "testnet" ? botChainTestnet : botChainMainnet
 
 export function explorerTxUrl(hash: string) {
   return `${activeChain.blockExplorers.default.url}/tx/${hash}`
