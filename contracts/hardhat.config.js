@@ -26,4 +26,19 @@ module.exports = {
     },
     hardhat: {},
   },
+  etherscan: {
+    apiKey: {
+      botchain: process.env.BOTCHAIN_EXPLORER_API_KEY || "blockscout",
+    },
+    customChains: [
+      {
+        network: "botchain",
+        chainId: 677,
+        urls: {
+          apiURL: "https://scan.botchain.ai/api",
+          browserURL: "https://scan.botchain.ai",
+        },
+      },
+    ],
+  },
 };

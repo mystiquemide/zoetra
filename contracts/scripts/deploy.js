@@ -3,13 +3,21 @@ const path = require("path");
 const hre = require("hardhat");
 
 async function main() {
+  const network = hre.network.name;
+  const expectedChainIds = { bohr: 968, botchain: 677 };
+  const expectedChainId = expectedChainIds[network];
+  const actualChainId = Number((await hre.ethers.provider.getNetwork()).chainId);
+
+  if (expectedChainId && actualChainId !== expectedChainId) {
+    throw new Error(`wrong chain: ${network} expected ${expectedChainId}, got ${actualChainId}`);
+  }
+
   const Registry = await hre.ethers.getContractFactory("ZoetraRegistry");
   const registry = await Registry.deploy();
   await registry.waitForDeployment();
 
   const address = await registry.getAddress();
-  const network = hre.network.name;
-  const chainId = hre.network.config.chainId;
+  const chainId = actualChainId;
 
   console.log(`ZoetraRegistry deployed to ${address} on ${network} (chainId ${chainId})`);
 

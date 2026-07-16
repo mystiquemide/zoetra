@@ -1,0 +1,15 @@
+[
+  {
+    "network": "botchain",
+    "chainId": 677,
+    "registry": "0x42233C40D7bE6ce4cECE6736D8bC0381d9Ea17Ac",
+    "deviceId": "1",
+    "operator": "0xAbf039f2DC31084F5E0713708C96068126a043e9",
+    "name": "zoetra-mainnet-demo",
+    "intervalSec": 300,
+    "slaBps": 9000,
+    "stakeBot": "0.05",
+    "registerTx": "0xd14d3aa25135c32536d6d0442fd53ac6314f3bac9d5f8a1edbca5f56a9834587",
+    "registeredAt": "2026-07-16T08:08:41.345Z"
+  }
+]

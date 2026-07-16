@@ -11,6 +11,7 @@ const RPC_URL = requireEnv("RPC_URL");
 const PRIVATE_KEY = requireEnv("PRIVATE_KEY");
 const DEVICE_ID = requireEnv("DEVICE_ID");
 const INTERVAL_MS = Number(process.env.INTERVAL_MS || "5000");
+const MAX_BEATS = Number(process.env.MAX_BEATS || "0");
 const REGISTRY_ADDRESS = requireEnv("REGISTRY_ADDRESS");
 const CHAIN_ID = Number(process.env.CHAIN_ID || "968");
 
@@ -115,12 +116,20 @@ async function beatOnce() {
 }
 
 async function run() {
-  log(`starting: device=${DEVICE_ID} interval=${INTERVAL_MS}ms registry=${REGISTRY_ADDRESS} chain=${CHAIN_ID} operator=${account.address}`);
+  log(
+    `starting: device=${DEVICE_ID} interval=${INTERVAL_MS}ms maxBeats=${MAX_BEATS || "unlimited"} registry=${REGISTRY_ADDRESS} chain=${CHAIN_ID} operator=${account.address}`
+  );
 
   const scheduleStart = Date.now();
   while (!stopped) {
     tickCount += 1;
     await beatOnce();
+
+    if (MAX_BEATS > 0 && tickCount >= MAX_BEATS) {
+      log(`max beats reached (${MAX_BEATS}), exiting cleanly`);
+      stopped = true;
+      break;
+    }
 
     const nextTick = scheduleStart + tickCount * INTERVAL_MS;
     const waitMs = Math.max(0, nextTick - Date.now());
