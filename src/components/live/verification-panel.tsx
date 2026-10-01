@@ -16,7 +16,7 @@ export function VerificationPanel({ deviceCount }: { deviceCount: number }) {
     [
       "Contract",
       <span key="addr" className="inline-flex items-center gap-1.5 text-z-alive">
-        <Link href={`/address/${REGISTRY_ADDRESS}`} className="font-mono hover:underline">
+        <Link href={`/address/${REGISTRY_ADDRESS}`} prefetch={false} className="font-mono hover:underline">
           {REGISTRY_ADDRESS.slice(0, 10)}...{REGISTRY_ADDRESS.slice(-6)}
         </Link>
         <CopyButton value={REGISTRY_ADDRESS} className="text-z-alive hover:text-z-alive" />

@@ -47,7 +47,10 @@ export interface BlockscoutAddress {
 
 async function blockscoutFetch<T>(path: string): Promise<T | null> {
   try {
-    const res = await fetch(`${BASE_URL}/api/v2${path}`, { next: { revalidate: 5 } })
+    const res = await fetch(`${BASE_URL}/api/v2${path}`, {
+      next: { revalidate: 5 },
+      signal: AbortSignal.timeout(8_000),
+    })
     if (!res.ok) return null
     return (await res.json()) as T
   } catch {

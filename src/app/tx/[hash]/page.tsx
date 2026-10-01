@@ -23,6 +23,8 @@ function formatBot(wei: string): string {
 
 export default async function TxPage({ params }: { params: Promise<{ hash: string }> }) {
   const { hash } = await params
+  if (hash.length !== 66 || !/^0x[0-9a-fA-F]{64}$/.test(hash)) notFound()
+
   const tx = await fetchTransaction(hash)
   if (!tx) notFound()
 
@@ -56,13 +58,13 @@ export default async function TxPage({ params }: { params: Promise<{ hash: strin
           <Row label="Block">{tx.block_number.toLocaleString()}</Row>
           <Row label="Timestamp">{new Date(tx.timestamp).toLocaleString()}</Row>
           <Row label="From">
-            <Link href={`/address/${tx.from.hash}`} className="text-z-alive hover:underline">
+            <Link href={`/address/${tx.from.hash}`} prefetch={false} className="text-z-alive hover:underline">
               {tx.from.hash.slice(0, 10)}...{tx.from.hash.slice(-6)}
             </Link>
           </Row>
           {tx.to && (
             <Row label="To">
-              <Link href={`/address/${tx.to.hash}`} className="text-z-alive hover:underline">
+              <Link href={`/address/${tx.to.hash}`} prefetch={false} className="text-z-alive hover:underline">
                 {tx.to.hash.slice(0, 10)}...{tx.to.hash.slice(-6)}
               </Link>
               {tx.to.is_contract && <span className="ml-2 text-z-text-dim">(contract)</span>}

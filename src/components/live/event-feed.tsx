@@ -39,6 +39,7 @@ export function EventFeed({ entries }: { entries: FeedEntry[] }) {
             </div>
             <Link
               href={`/tx/${entry.txHash}`}
+              prefetch={false}
               className="shrink-0 font-mono text-xs text-z-alive hover:underline"
             >
               {entry.txHash.slice(0, 8)}

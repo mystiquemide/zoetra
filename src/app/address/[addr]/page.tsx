@@ -158,6 +158,7 @@ export default async function AddressPage({ params }: { params: Promise<{ addr: 
                 <Link
                   key={tx.hash}
                   href={`/tx/${tx.hash}`}
+                  prefetch={false}
                   className="flex items-center justify-between gap-3 py-2.5 text-sm hover:bg-z-surface-2"
                 >
                   <div className="flex items-center gap-2 text-z-text-dim">

@@ -211,7 +211,7 @@ export function DeviceCard({
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-2">
-        <Link href={`/address/${device.operator}`} className="font-mono text-xs text-z-text-dim hover:text-z-alive">
+        <Link href={`/address/${device.operator}`} prefetch={false} className="font-mono text-xs text-z-text-dim hover:text-z-alive">
           Op {device.operator.slice(0, 6)}...{device.operator.slice(-4)}
         </Link>
         <Button

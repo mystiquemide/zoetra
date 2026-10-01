@@ -34,7 +34,7 @@ export function ProofTrail({ deviceId, entries }: { deviceId: bigint; entries: F
                   <Icon className={cn("h-3 w-3", COLOR[e.kind])} />
                   <span>{e.detail}</span>
                 </div>
-                <Link href={`/tx/${e.txHash}`} className="font-mono text-z-alive hover:underline">
+                <Link href={`/tx/${e.txHash}`} prefetch={false} className="font-mono text-z-alive hover:underline">
                   {e.txHash.slice(0, 8)}
                 </Link>
               </div>
